@@ -1,0 +1,105 @@
+.pageShell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: calc(var(--nav-height) + var(--space-xl)) var(--space-lg) var(--space-xl);
+}
+
+.pageLabel {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: var(--space-md);
+}
+
+.pageTitle {
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+  margin-bottom: var(--space-md);
+}
+
+.pageDesc {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  max-width: 520px;
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+.pageCardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-md);
+  max-width: var(--max-width);
+  width: 100%;
+  margin-top: var(--space-xl);
+  padding: 0 var(--space-lg);
+}
+
+.pageCard {
+  padding: var(--space-xl);
+  text-align: left;
+}
+
+.pageCardTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-xs);
+}
+
+.pageCardDesc {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.contactForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  max-width: 480px;
+  width: 100%;
+  margin-top: var(--space-xl);
+}
+
+.input {
+  padding: 0.9rem 1.25rem;
+  background: var(--glass-bg);
+  backdrop-filter: blur(var(--glass-blur));
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  outline: none;
+  transition: var(--transition);
+}
+
+.input::placeholder {
+  color: var(--text-tertiary);
+}
+
+.input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-subtle);
+}
+
+.textarea {
+  composes: input;
+  min-height: 120px;
+  resize: vertical;
+}
+
+.submitBtn {
+  composes: btn-primary from global;
+  justify-content: center;
+  margin-top: var(--space-xs);
+}

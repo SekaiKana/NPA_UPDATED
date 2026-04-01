@@ -1,0 +1,275 @@
+/* =============================================
+   ABOUT PAGE — Company Overview, Team, CTA
+   ============================================= */
+
+/* ---- Commitment Tabs ---- */
+
+.commitment {
+  padding: var(--space-xl) var(--space-lg) var(--space-3xl);
+  max-width: 900px;
+  margin-inline: auto;
+}
+
+.commitmentTitle {
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin-bottom: var(--space-xl);
+  text-align: center;
+}
+
+.commitmentGrid {
+  display: grid;
+  grid-template-columns: 3fr 7fr;
+  gap: var(--space-md);
+  align-items: start;
+}
+
+/* Tab navigation (left column) */
+
+.tabNav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.tabButton {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-left: 2px solid transparent;
+  border-radius: 0 8px 8px 0;
+  transition: var(--transition);
+}
+
+.tabButton:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.tabDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-tertiary);
+  flex-shrink: 0;
+  transition: var(--transition);
+}
+
+.tabLabel {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  transition: var(--transition);
+  text-align: left;
+}
+
+.tabButtonActive {
+  border-left-color: var(--accent);
+  background: rgba(184, 115, 51, 0.06);
+}
+
+.tabButtonActive .tabDot {
+  background: var(--accent);
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+
+.tabButtonActive .tabLabel {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 1.05rem;
+}
+
+/* Tab content (right column) */
+
+.tabContent {
+  display: flex;
+  align-items: start;
+  min-height: 180px;
+}
+
+.tabText {
+  font-size: 1.15rem;
+  color: var(--text-secondary);
+  line-height: 1.9;
+  font-weight: 300;
+  animation: tabFadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes tabFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---- Team Section ---- */
+
+.team {
+  padding: var(--space-xl) var(--space-sm) var(--space-3xl);
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.teamTitle {
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  text-align: center;
+  margin-bottom: var(--space-xl);
+}
+
+.teamGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-lg);
+}
+
+.memberCard {
+  padding: var(--space-xl) var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.memberImageWrap {
+  width: 140px;
+  height: 140px;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: var(--space-md);
+  box-shadow:
+    0 4px 24px rgba(184, 115, 51, 0.2),
+    0 0 48px rgba(184, 115, 51, 0.08);
+  border: 1px solid rgba(184, 115, 51, 0.15);
+}
+
+.memberImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.memberName {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.memberTitle {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: var(--space-sm);
+}
+
+.memberBio {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.75;
+  font-weight: 300;
+  text-align: left;
+  align-self: stretch;
+}
+
+/* ---- CTA Section ---- */
+
+.cta {
+  padding: var(--space-xl) var(--space-lg) var(--space-3xl);
+  text-align: center;
+}
+
+.ctaTitle {
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  margin-bottom: var(--space-xl);
+}
+
+.ctaButton {
+  composes: btn-primary from global;
+}
+
+/* ---- Responsive ---- */
+
+@media (max-width: 768px) {
+  .commitment {
+    padding: var(--space-2xl) var(--space-sm);
+  }
+
+  .commitmentGrid {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  .tabNav {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: var(--space-sm);
+    padding-bottom: 0.5rem;
+    padding-inline: var(--space-sm);
+    /* Hide scrollbar */
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .tabNav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tabButton {
+    white-space: nowrap;
+    flex-shrink: 0;
+    border-left: none;
+    border-bottom: 2px solid transparent;
+    border-radius: 8px 8px 0 0;
+    padding: 0.6rem 0.75rem;
+  }
+
+  .tabButtonActive {
+    border-bottom-color: var(--accent);
+    border-left-color: transparent;
+  }
+
+  .tabDot {
+    display: none;
+  }
+
+  .team {
+    padding: var(--space-2xl) var(--space-sm);
+  }
+
+  .teamGrid {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  .memberImageWrap {
+    width: 110px;
+    height: 110px;
+  }
+
+  .cta {
+    padding: var(--space-2xl) var(--space-sm);
+  }
+}
+
