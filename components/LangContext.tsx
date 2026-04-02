@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 type Lang = 'EN' | 'JP';
 
@@ -197,6 +197,22 @@ export function LangProvider({ children }: { children: ReactNode }) {
     if (!entry) return key;
     return entry[lang] ?? entry['EN'] ?? key;
   };
+
+  useEffect(() => {
+    if (lang === 'EN') {
+      document.title = "Custom B2B Software & AI Development Tokyo | Neural Point Analytica (NPA)";
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) {
+        metaDesc.setAttribute('content', "Rapid, elite software engineering for modern companies. Based in Tokyo, Neural Point Analytica builds custom B2B platforms, AI integrations, and high-performance internal tools.");
+      }
+    } else {
+      document.title = "カスタムB2Bソフトウェア＆AI開発（東京）｜Neural Point Analytica (NPA)";
+      const metaDesc = document.querySelector('meta[name="description"]');
+      if (metaDesc) {
+        metaDesc.setAttribute('content', "現代の企業に向けた最高峰のソフトウェアエンジニアリング。東京を拠点とする Neural Point Analytica は、カスタムプラットフォーム、AI統合、高性能な社内ツールを圧倒的なスピードで構築します。");
+      }
+    }
+  }, [lang]);
 
   return (
     <LangContext.Provider value={{ lang, setLang, t }}>
