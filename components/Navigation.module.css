@@ -186,7 +186,7 @@
   left: 0;
   width: 100%;
   height: 100vh;
-  background: rgba(5, 5, 5, 0.98);
+  background: #0a0a0a;
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   z-index: 200;
@@ -194,7 +194,8 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--space-2xl) var(--space-md);
+  gap: 3rem;
+  padding: var(--space-xl) var(--space-md);
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.3s ease;
@@ -226,12 +227,12 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
+  gap: 1.25rem;
   width: 100%;
 }
 
 .mobileLink {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 500;
   color: var(--text-primary);
   text-decoration: none;
@@ -253,12 +254,10 @@
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  margin-top: 3.5rem;
-  margin-bottom: 3.5rem;
 }
 
 .mobileLangOption {
-  font-size: 1.25rem;
+  font-size: 1rem;
   font-weight: 500;
   color: var(--text-tertiary);
   background: none;
@@ -279,7 +278,7 @@
 }
 
 .mobileLangDivider {
-  font-size: 1.25rem;
+  font-size: 1rem;
   color: var(--text-tertiary);
   opacity: 0.4;
 }
@@ -288,10 +287,10 @@
   width: 100%;
   max-width: 250px;
   text-align: center;
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 500;
   color: var(--text-primary);
-  padding: 1rem 2rem;
+  padding: 0.75rem 1.5rem;
   border: 1px solid var(--border);
   border-radius: 60px;
   text-decoration: none;

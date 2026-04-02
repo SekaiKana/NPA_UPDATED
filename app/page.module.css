@@ -324,7 +324,13 @@
 @media (max-width: 768px) {
   .servicesGrid {
     grid-template-columns: 1fr;
+    justify-items: center;
     padding: 0 var(--space-sm);
+  }
+
+  .serviceCard {
+    width: 100%;
+    max-width: 400px;
   }
 
   .vibeInner {

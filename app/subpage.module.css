@@ -103,3 +103,22 @@
   justify-content: center;
   margin-top: var(--space-xs);
 }
+
+@media (max-width: 768px) {
+  .pageShell {
+    padding: calc(var(--nav-height) + var(--space-xl)) var(--space-sm) var(--space-xl);
+  }
+
+  .pageCardGrid {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    padding: 0;
+  }
+
+  .pageCard {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: var(--space-lg);
+  }
+}

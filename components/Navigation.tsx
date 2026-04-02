@@ -103,8 +103,26 @@ export default function Navigation() {
           <span className={styles.closeIcon}>&times;</span>
         </button>
 
+        <div className={styles.mobileLangToggle}>
+          <button
+            className={`${styles.mobileLangOption} ${lang === 'EN' ? styles.langActive : ''}`}
+            onClick={() => { setLang('EN'); closeMenu(); }}
+          >
+            EN
+          </button>
+          <span className={styles.mobileLangDivider}>/</span>
+          <button
+            className={`${styles.mobileLangOption} ${lang === 'JP' ? styles.langActive : ''}`}
+            onClick={() => { setLang('JP'); closeMenu(); }}
+          >
+            JP
+          </button>
+        </div>
+
         <div className={styles.mobileNavLinks}>
-          {navLinks.map((link) =>
+          {navLinks
+            .filter((link) => link.labelKey !== 'nav.contact')
+            .map((link) =>
             link.disabled ? (
               <span
                 key={link.href}
@@ -125,22 +143,6 @@ export default function Navigation() {
               </Link>
             )
           )}
-        </div>
-
-        <div className={styles.mobileLangToggle}>
-          <button
-            className={`${styles.mobileLangOption} ${lang === 'EN' ? styles.langActive : ''}`}
-            onClick={() => { setLang('EN'); closeMenu(); }}
-          >
-            EN
-          </button>
-          <span className={styles.mobileLangDivider}>/</span>
-          <button
-            className={`${styles.mobileLangOption} ${lang === 'JP' ? styles.langActive : ''}`}
-            onClick={() => { setLang('JP'); closeMenu(); }}
-          >
-            JP
-          </button>
         </div>
 
         <Link href="mailto:rentaro.sato@npanalytica.com" className={styles.mobileCta} onClick={closeMenu}>
