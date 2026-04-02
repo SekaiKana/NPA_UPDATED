@@ -1,3 +1,4 @@
+"use client";
 import styles from "../subpage.module.css";
 
 export default function Contact() {
