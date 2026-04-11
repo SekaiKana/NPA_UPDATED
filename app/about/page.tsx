@@ -29,7 +29,7 @@ export default function About() {
       bioKey: "about.team.member3.bio",
     },
     {
-      image: "/placeholder-silhouette.png",
+      image: "/IMG_Rentaroo.jpg",
       name: "Rentaro Sato",
       titleKey: "about.team.member4.title",
       bioKey: "about.team.member4.bio",
