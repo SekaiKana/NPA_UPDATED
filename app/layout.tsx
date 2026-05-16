@@ -4,6 +4,7 @@ import "./globals.css";
 import SceneWrapper from "@/components/SceneWrapper";
 import Navigation from "@/components/Navigation";
 import Providers from "@/components/Providers";
+import { Analytics } from "@vercel/analytics/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -45,6 +46,7 @@ export default function RootLayout({
           <Navigation />
           <main className="page-content">{children}</main>
         </Providers>
+        <Analytics />
       </body>
     </html>
   );
