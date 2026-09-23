@@ -1,0 +1,43 @@
+/* Reserves the hero's space in normal flow. The schematic is drawn on the
+   shared canvas behind the page, positioned from this element's rect. */
+.field {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* The WebGL scene takes both its position and its size from this element's
+   rect, so these rules are the only place the hero art is composed.
+
+   Narrow screens: keep it in the upper band, above the body copy, at a size
+   that reads as a mark rather than as a background the text is trapped in. */
+@media (max-width: 1099px) {
+  .field {
+    bottom: auto;
+    height: 46%;
+    align-items: flex-start;
+  }
+}
+
+/* Wide screens: off-centre to the right, so the left-aligned headline keeps
+   clear air beside it. */
+@media (min-width: 1100px) {
+  .field {
+    left: auto;
+    right: 0;
+    /* Narrower than the visual half so the blob's centre sits well right of
+       the headline. Japanese sets wider than English and was colliding. */
+    width: 52%;
+  }
+}
+
+.fallback {
+  width: min(78vmin, 640px);
+  height: auto;
+  color: var(--ink);
+  opacity: 0.8;
+}

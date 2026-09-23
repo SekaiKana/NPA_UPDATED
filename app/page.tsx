@@ -1,139 +1,125 @@
 'use client';
 
-import styles from "./page.module.css";
-import Footer from "@/components/Footer";
-import { useLang } from "@/components/LangContext";
+import { useLang } from '@/components/LangContext';
+import { TransitionLink, useTransitionNav } from '@/components/motion/PageTransition';
+import DisplayReveal from '@/components/motion/DisplayReveal';
+import Reveal from '@/components/motion/Reveal';
+import Magnetic from '@/components/motion/Magnetic';
+import HeroField from '@/components/webgl/HeroField';
+import SectionHead from '@/components/ui/SectionHead';
+import IndexRow from '@/components/ui/IndexRow';
+import ScrollStatement from '@/components/home/ScrollStatement';
+import CountUp from '@/components/motion/CountUp';
+import GlassSurface from '@/components/glass/GlassSurface';
+import styles from './home.module.css';
+
+/** The three the homepage leads with; /capabilities carries all six. */
+const LEAD_CAPABILITIES = ['1', '2', '3'] as const;
+
+const SPECS = ['1', '2', '3'] as const;
 
 export default function Home() {
   const { t } = useLang();
+  const { navigate } = useTransitionNav();
 
   return (
     <>
-      {/* ===== HERO ===== */}
-      <section className={styles.hero} id="hero">
-        <div className={`${styles.heroContent} animate-in`}>
-          <h1 className={styles.heroTitle}>
-            {t('home.hero.title1')}
-            <span className={styles.heroTitleAccent}>{t('home.hero.title2')}</span>
+      {/* ---------- HERO ---------- */}
+      <section className={`${styles.hero} invert invert-stage`} data-hero-stage>
+        <HeroField />
+
+        <div className={`shell ${styles.heroInner}`}>
+          <h1 className={`display d-xl ${styles.heroTitle}`}>
+            <DisplayReveal immediate delay={0.15}>
+              {t('home.hero.l1')}
+            </DisplayReveal>
+            <DisplayReveal immediate delay={0.24}>
+              {t('home.hero.l2')}
+            </DisplayReveal>
+            <DisplayReveal immediate delay={0.33} className={styles.heroAccent}>
+              {t('home.hero.l3')}
+            </DisplayReveal>
           </h1>
-          <p className={`${styles.heroSub} animate-in animate-in-delay-2`}>
-            {t('home.hero.sub')}
-          </p>
-          <a href="mailto:rentaro.sato@npanalytica.com" className={`${styles.heroCta} animate-in animate-in-delay-3`}>
-            {t('home.hero.cta')}<span className="arrow">→</span>
-          </a>
-        </div>
-        <div className={styles.scrollIndicator}>
-          <span>Scroll</span>
-          <div className={styles.scrollLine} />
-        </div>
-      </section>
 
-      {/* ===== SERVICES ===== */}
-      <section className={styles.services} id="services">
-        <div className={styles.servicesHeader}>
-          <p className="section-label">{t('home.services.label')}</p>
-          <h2 className="heading-lg">{t('home.services.title')}</h2>
-        </div>
-
-        <div className={styles.servicesGrid}>
-          <div className={`glass-card ${styles.serviceCard}`}>
-            <span className={styles.serviceIcon}>⬡</span>
-            <span className={styles.serviceNumber}>01</span>
-            <h3 className={styles.serviceTitle}>{t('home.services.card1.title')}</h3>
-            <p className={styles.serviceDesc}>
-              {t('home.services.card1.body')}
-            </p>
-          </div>
-
-          <div className={`glass-card ${styles.serviceCard}`}>
-            <span className={styles.serviceIcon}>⬢</span>
-            <span className={styles.serviceNumber}>02</span>
-            <h3 className={styles.serviceTitle}>{t('home.services.card2.title')}</h3>
-            <p className={styles.serviceDesc}>
-              {t('home.services.card2.body')}
-            </p>
-          </div>
-
-          <div className={`glass-card ${styles.serviceCard}`}>
-            <span className={styles.serviceIcon}>◇</span>
-            <span className={styles.serviceNumber}>03</span>
-            <h3 className={styles.serviceTitle}>{t('home.services.card3.title')}</h3>
-            <p className={styles.serviceDesc}>
-              {t('home.services.card3.body')}
-            </p>
+          <div className={styles.heroFoot}>
+            <Reveal delay={0.5}>
+              <p className="body-lg">{t('home.hero.sub')}</p>
+            </Reveal>
           </div>
         </div>
       </section>
 
-      <hr className="section-divider" />
+      {/* ---------- STATEMENT ---------- */}
+      <ScrollStatement
+        label={t('home.statement.label')}
+        body={t('home.statement.body')}
+      />
 
-      {/* ===== VIBE SECTION ===== */}
-      <section className={styles.vibe} id="vibe">
-        <div className={styles.vibeInner}>
-          <div className={styles.vibeContent}>
-            <p className="section-label">{t('home.vibe.label')}</p>
-            <h2 className={styles.vibeTitle}>
-              {t('home.vibe.title')}
-            </h2>
-            <p className={styles.vibeText}>
-              {t('home.vibe.p1')}
-            </p>
-            <p className={styles.vibeText}>
-              {t('home.vibe.p2')}
-            </p>
+      {/* ---------- CAPABILITIES ---------- */}
+      <section className={`shell ${styles.section}`} id="capabilities">
+        <SectionHead
+          label={t('home.cap.label')}
+          title={t('home.cap.title')}
+          aside={
+            <Magnetic>
+              <TransitionLink href="/capabilities" className={styles.asideLink}>
+                <span className="link-u">{t('home.cap.link')}</span>
+                <span aria-hidden="true"> &#8594;</span>
+              </TransitionLink>
+            </Magnetic>
+          }
+        />
 
-            <div className={styles.vibeStats}>
-              <div className={styles.stat}>
-                <div className={styles.statNumber}>14</div>
-                <div className={styles.statLabel}>{t('home.vibe.stat1')}</div>
-              </div>
-              <div className={styles.stat}>
-                <div className={styles.statNumber}>100%</div>
-                <div className={styles.statLabel}>{t('home.vibe.stat2')}</div>
-              </div>
-              <div className={styles.stat}>
-                <div className={styles.statNumber}>0</div>
-                <div className={styles.statLabel}>{t('home.vibe.stat3')}</div>
-              </div>
-            </div>
-          </div>
-
-          <div className={styles.vibeVisual}>
-            <div className={`glass-card ${styles.codeBlock}`}>
-              <span className={styles.codeLine}>
-                <span className={styles.codeComment}>{"// build.config.ts"}</span>
-              </span>
-              <span className={styles.codeLine}>
-                <span className={styles.codeKeyword}>export const</span>{" "}
-                project = {"{"}
-              </span>
-              <span className={styles.codeLine}>
-                {"  "}type:{" "}
-                <span className={styles.codeString}>&quot;any_business_need&quot;</span>,
-              </span>
-              <span className={styles.codeLine}>
-                {"  "}speed:{" "}
-                <span className={styles.codeString}>&quot;accelerated&quot;</span>,
-              </span>
-              <span className={styles.codeLine}>
-                {"  "}quality:{" "}
-                <span className={styles.codeString}>&quot;production-ready&quot;</span>,
-              </span>
-              <span className={styles.codeLine}>
-                {"  "}limitations:{" "}
-                <span className={styles.codeKeyword}>false</span>,
-              </span>
-              <span className={styles.codeLine}>{"}"}</span>
-            </div>
-          </div>
+        <div className={styles.index}>
+          {LEAD_CAPABILITIES.map((n, i) => (
+            <IndexRow
+              key={n}
+              index={String(i + 1).padStart(3, '0')}
+              title={t(`cap.${n}.title`)}
+              body={t(`cap.${n}.desc`)}
+              onActivate={() => navigate('/capabilities')}
+            />
+          ))}
         </div>
       </section>
 
-      <hr className="section-divider" />
+      {/* ---------- THE EDGE ---------- */}
+      <section className={`shell ${styles.section}`} id="approach">
+        <div className={styles.approach}>
+          <div className={styles.approachLead}>
+            <Reveal>
+              <span className="label">{t('home.approach.label')}</span>
+            </Reveal>
+            <DisplayReveal as="h2" className={`display d-md ${styles.approachTitle}`}>
+              {t('home.approach.title')}
+            </DisplayReveal>
+            <Reveal delay={0.1}>
+              <p className="body">{t('home.approach.body')}</p>
+            </Reveal>
+          </div>
 
-      {/* ===== FOOTER ===== */}
-      <Footer />
+          {/* The three claims as a spec table rather than stat cards — reads
+              as a datasheet, which is the register the whole site is in. */}
+          {/* The datasheet sits on a glass plate: with WebGL live this is a
+              real refraction of the field moving behind the page, not a
+              backdrop-filter blur. GlassSurface falls back to the blur on
+              its own where WebGL is unavailable. */}
+          <GlassSurface className={styles.specPanel} radius={3} tint={0.5}>
+            <Reveal className={styles.specs} stagger={0.09}>
+              {SPECS.map((n) => (
+                <div key={n} className={styles.spec}>
+                  <CountUp
+                    value={t(`home.spec${n}.value`)}
+                    className={styles.specValue}
+                  />
+                  <span className={styles.specUnit}>{t(`home.spec${n}.unit`)}</span>
+                  <span className={styles.specLabel}>{t(`home.spec${n}.label`)}</span>
+                </div>
+              ))}
+            </Reveal>
+          </GlassSurface>
+        </div>
+      </section>
     </>
   );
 }

@@ -1,0 +1,48 @@
+/* =============================================================
+   STATUS ROUTES — 404 and the error boundary
+   Both reuse the subpage masthead; this file only adds the
+   actions beneath the lead and the index that 404 offers as the
+   way back into the site.
+   ============================================================= */
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--s-3);
+  margin-top: var(--s-3);
+}
+
+.action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: var(--s-3);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--ink);
+  transition: color var(--t-fast) var(--ease);
+}
+
+/* Inside .actions the gap already supplies the offset. */
+.actions .action { margin-top: 0; }
+
+.action:hover { color: var(--accent); }
+
+.digest {
+  display: block;
+  margin-top: var(--s-3);
+  color: var(--ink-3);
+}
+
+.index {
+  border-top: 1px solid var(--rule);
+}
+
+/* IndexRow paints its own rule and hover fill; the wrapping anchor only has
+   to make the whole row a hit target. */
+.indexLink {
+  display: block;
+}

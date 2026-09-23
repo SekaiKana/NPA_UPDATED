@@ -1,0 +1,58 @@
+/* =============================================================
+   SHARED SUBPAGE SHELL
+   Every route below the homepage opens the same way: a wide
+   masthead with a label, a display title and a short lead, ruled
+   off from the content beneath it.
+   ============================================================= */
+
+.masthead {
+  padding-top: calc(var(--nav-h) + var(--s-7));
+  padding-bottom: var(--s-6);
+}
+
+
+.mastheadInner {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: var(--s-5);
+  align-items: end;
+}
+
+.mastLead {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+
+.title { max-width: 12ch; }
+
+.lead {
+  padding-bottom: 0.5rem;
+}
+
+/* The masthead lead is set larger than body copy everywhere else on the page.
+   It sits in the narrow column of the grid opposite a display title, and at
+   the plain body size it ran short of the column and left the right half of
+   the masthead looking half-empty next to the title. The 38ch cap that `.body`
+   carries is what held it in, so that goes up too — the grid column is the
+   real limit here, and the measure stays comfortable because the column is
+   narrow to begin with. */
+.lead :global(.body) {
+  font-size: clamp(1.125rem, 1.35vw, 1.3125rem);
+  line-height: 1.58;
+  max-width: 46ch;
+}
+
+.section { padding-block: var(--s-7); }
+.sectionTight { padding-block: var(--s-6); }
+
+.rule {
+  height: 1px;
+  background: var(--rule);
+  width: 100%;
+}
+
+@media (max-width: 880px) {
+  .mastheadInner { grid-template-columns: 1fr; align-items: start; }
+  .masthead { padding-top: calc(var(--nav-h) + var(--s-5)); }
+}

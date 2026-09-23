@@ -1,0 +1,83 @@
+.root {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  background: var(--ground);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: var(--gutter);
+  padding-top: calc(var(--gutter) + env(safe-area-inset-top, 0px));
+  padding-bottom: calc(var(--gutter) + env(safe-area-inset-bottom, 0px));
+  cursor: pointer;
+}
+
+/* Four hairlines drawing themselves across the field — the blueprint being
+   laid down before anything is built on it. */
+.grid {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 18vh;
+  padding-inline: var(--gutter);
+  pointer-events: none;
+}
+
+.line {
+  display: block;
+  height: 1px;
+  width: 100%;
+  background: var(--rule);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.mark {
+  position: relative;
+  overflow: hidden;
+  padding-bottom: 0.12em;
+}
+
+.markInner {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2rem, 7.5vw, 7rem);
+  line-height: 0.94;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+
+.meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-3);
+  margin-top: var(--s-3);
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--rule);
+}
+
+.counter {
+  font-family: var(--font-mono);
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+  letter-spacing: -0.02em;
+}
+
+.skip {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+@media (max-width: 640px) {
+  .grid { gap: 12vh; }
+  .skip { letter-spacing: 0.18em; }
+}

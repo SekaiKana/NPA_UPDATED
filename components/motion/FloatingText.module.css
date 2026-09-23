@@ -1,0 +1,37 @@
+/* =============================================================
+   FLOATING PARAGRAPH
+   Word-level drift and cursor response. The paragraph keeps the
+   colour, measure and leading of whatever class it is given;
+   only the per-word behaviour lives here.
+   ============================================================= */
+
+/* `p.para` rather than `.para`: this sits alongside the global `.body` class
+   and both are single class selectors, so the element selector is what makes
+   the size win deterministically instead of depending on stylesheet order. */
+p.para {
+  /* A step above body copy. These two paragraphs carry the argument of their
+     page and are the only ones that answer the cursor, so they earn it. */
+  font-size: clamp(1.15rem, 1.25vw, 1.3rem);
+  line-height: 1.62;
+  /* Words are inline-block so they can be transformed, which would otherwise
+     sit them on their own baselines. */
+  text-wrap: pretty;
+}
+
+.token {
+  display: inline-block;
+  /* 0 at rest, 1 with the cursor on top. */
+  --near: 0;
+  will-change: transform;
+
+  color: inherit;
+  color: color-mix(in srgb, var(--accent) calc(var(--near) * 100%), currentColor);
+}
+
+/* Nothing moves, and nothing needs to: the paragraph is just a paragraph. */
+@media (prefers-reduced-motion: reduce) {
+  .token {
+    transform: none !important;
+    color: inherit;
+  }
+}

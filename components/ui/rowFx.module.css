@@ -1,0 +1,161 @@
+/* =============================================================
+   SHARED ROW INTERACTION
+   The hover and focus behaviour for every list-style row on the
+   site: capabilities, the homepage's lead capabilities, the studio
+   principles, the commitment accordion, the work index and the 404
+   suggestions. They are the same object — an index number, a
+   title, supporting copy, a trailing mark — so they get one
+   implementation rather than six that drift apart.
+
+   Used by importing this module alongside the component's own and
+   putting both classes on the element. The descendant rules below
+   work because every part carries a class hashed out of this one
+   file, so a component only has to say which of its elements is
+   the title, which is the arrow, and so on.
+
+   ---- How the state is driven ----
+   One selector sets `--on`, and every part reads it. That is the
+   whole reason this holds together: hover and keyboard focus
+   cannot drift apart, because neither one is written twice. It
+   also means a component can force the state — see `.rowOn` — by
+   setting a single property rather than by duplicating the rules.
+
+   Custom properties do not interpolate. They do not need to: what
+   transitions is the `transform` or `color` the property is
+   multiplied into, and that lands on its new value the moment the
+   flag flips, then eases there on the spring.
+   ============================================================= */
+
+.row {
+  --on: 0;
+  position: relative;
+  /* So the plate's negative z-index stays inside the row rather than sinking
+     behind the section's own background. */
+  isolation: isolate;
+}
+
+/* Gated on a real pointer. A tap on a touch screen leaves `:hover` stuck on
+   the last row touched, and a list where one row is permanently lit reads as
+   a broken selection state. */
+@media (hover: hover) and (pointer: fine) {
+  .row:hover { --on: 1; }
+}
+
+/* Keyboard, on equal terms with the mouse. `:focus-visible` rather than
+   `:focus`, so clicking a row does not leave it latched on after the pointer
+   has gone; `:has` on the row rather than the control, because the control is
+   inside and it is the whole row that responds.
+
+   A row with no focusable child — the work index, whose entries are not links
+   yet — simply never matches, and starts matching on its own the day those
+   entries become links. */
+.row:has(:focus-visible) { --on: 1; }
+
+/* An explicit override, for a row that is held open by state rather than by
+   the pointer: the commitment accordion's current step. */
+.rowOn { --on: 1; }
+
+/* ---- The plate ----
+   Behind the content, never in front of it, and never a pointer target: it
+   must not be able to break the row's own hit area. It rises and fades in
+   together, which is what gives the row its slight sense of lifting off the
+   page rather than just changing colour. */
+.plate {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: 3px;
+  background: var(--accent-soft);
+  opacity: var(--on);
+  transform: translateY(calc((1 - var(--on)) * 5px));
+  box-shadow:
+    0 calc(var(--on) * 14px) calc(var(--on) * 30px) rgba(18, 18, 18, calc(var(--on) * 0.07)),
+    0 calc(var(--on) * 2px) calc(var(--on) * 5px) rgba(18, 18, 18, calc(var(--on) * 0.05));
+  pointer-events: none;
+  transition:
+    opacity var(--t-fast) var(--ease),
+    transform var(--t-spring) var(--ease-spring),
+    box-shadow var(--t-spring) var(--ease-spring);
+}
+
+/* ---- The index number ----
+   The pop. It is the smallest thing in the row and the only one that changes
+   size, which is why it can take the livelier of the two springs without the
+   row as a whole looking unstable. Anchored left so the digits grow into the
+   gutter instead of pushing the title. */
+.index {
+  display: inline-block;
+  transform-origin: left center;
+  transform: scale(calc(1 + var(--on) * 0.24)) translateY(calc(var(--on) * -1px));
+  transition:
+    transform var(--t-spring) var(--ease-spring-pop),
+    color var(--t-fast) var(--ease);
+}
+
+/* ---- The title ----
+   The indent. Everything else is keyed off this one movement, so it carries
+   the furthest distance and the calmer spring. */
+.title {
+  display: block;
+  transform: translateX(calc(var(--on) * 12px));
+  transition: transform var(--t-spring) var(--ease-spring);
+}
+
+/* Copy under the title follows at about a third of the distance. Moving it
+   the same amount makes the block slide as one slab, which is stiff; moving
+   it less is what gives the row the sense of hinging from the left. */
+.trail {
+  display: block;
+  transform: translateX(calc(var(--on) * 4px));
+  transition: transform var(--t-spring) var(--ease-spring);
+}
+
+/* ---- The trailing mark ----
+   The arrow travels furthest of anything in the row and takes the bigger
+   overshoot, so it arrives with a flick. Read together with the title's
+   indent, the row appears to stretch under the cursor and settle back. */
+.arrow {
+  display: inline-block;
+  transform: translateX(calc(var(--on) * 14px));
+  transition:
+    transform var(--t-spring) var(--ease-spring-pop),
+    opacity var(--t-fast) var(--ease);
+}
+
+/* For rows whose trailing mark is not an arrow — the accordion's plus — where
+   sliding it sideways would fight the open/close it already animates. It gets
+   the scale pop alone. */
+.mark {
+  transform: scale(calc(1 + var(--on) * 0.12));
+  transition: transform var(--t-spring) var(--ease-spring-pop);
+}
+
+/* ---- Focus ring ----
+   The global ring is drawn at a 4px offset, which on a full-width row lands
+   somewhere out in the margin and reads as belonging to the page rather than
+   to the row. Rows draw it tight to the plate instead, and only for keyboard
+   focus. */
+.hit:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+  border-radius: 3px;
+}
+
+/* =============================================================
+   REDUCED MOTION
+   The state still reads — the plate, the colour and the focus ring
+   all remain — but nothing travels. A spring is exactly the kind
+   of motion this setting is asking not to see.
+   ============================================================= */
+@media (prefers-reduced-motion: reduce) {
+  .plate,
+  .index,
+  .title,
+  .trail,
+  .arrow,
+  .mark {
+    transform: none;
+    transition: opacity var(--t-fast) linear, color var(--t-fast) linear;
+  }
+  .plate { box-shadow: none; }
+}

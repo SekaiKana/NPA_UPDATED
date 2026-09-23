@@ -1,0 +1,140 @@
+.section {
+  padding-block: var(--s-8);
+  color: var(--ink);
+}
+
+.title {
+  margin-top: var(--s-3);
+  margin-bottom: var(--s-6);
+  max-width: 18ch;
+}
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--rule);
+}
+
+.step { border-bottom: 1px solid var(--rule); }
+
+.stepHead {
+  /* Positioned so the shared plate anchors to the head and not to the whole
+     step: anchored to the step it would light the open body too, which is
+     already distinguished by being open. */
+  position: relative;
+  display: grid;
+  grid-template-columns: 3.5rem 1fr 2rem;
+  gap: var(--s-3);
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  padding-block: var(--s-3);
+  /* Was a pair of rules, one for hover and one for the open step, saying the
+     same thing twice. Both are the same state, so both now come from the one
+     flag rowFx sets — including keyboard focus, which neither rule covered. */
+  color: color-mix(in srgb, var(--ink-2), var(--ink) calc(var(--on, 0) * 100%));
+  transition: color var(--t-fast) var(--ease);
+}
+
+/* Bled past the head's own box so the lift has a margin to sit in. */
+.stepHead .plate {
+  inset: 2px calc(var(--s-2) * -1);
+}
+
+.stepIndex {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.2em;
+  /* See IndexRow.module.css: plain --accent until the step is live. Inverted
+     here, so the mix toward --ink brightens the tint. */
+  color: color-mix(in srgb, var(--accent), var(--ink) calc(var(--on, 0) * 45%));
+}
+
+.stepLabel { color: inherit; }
+
+/* A plus that becomes a minus. */
+.stepMark {
+  position: relative;
+  width: 14px;
+  height: 14px;
+  justify-self: end;
+}
+
+.stepMark::before,
+.stepMark::after {
+  content: '';
+  position: absolute;
+  background: currentColor;
+  /* The bar that stays put turns with the step, so the plus does not merely
+     lose its stroke but rotates into the minus. On the pop spring, which is
+     the curve the rest of the site's small parts already use. */
+  transition:
+    transform var(--t-spring) var(--ease-spring-pop),
+    opacity var(--t-mid) var(--ease);
+}
+
+.stepMark::before {
+  top: 50%;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  transform: translateY(-50%);
+}
+
+.stepMark::after {
+  left: 50%;
+  top: 0;
+  height: 100%;
+  width: 1px;
+  transform: translateX(-50%) scaleY(1);
+}
+
+.stepOpen .stepMark::before { transform: translateY(-50%) rotate(180deg); }
+.stepOpen .stepMark::after { transform: translateX(-50%) scaleY(0) rotate(180deg); }
+
+.stepBody {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--t-mid) var(--ease);
+}
+
+.stepBody[data-open='true'] { grid-template-rows: 1fr; }
+
+.stepBodyInner { overflow: hidden; }
+
+.stepBodyInner p {
+  padding-left: calc(3.5rem + var(--s-3));
+  padding-bottom: var(--s-4);
+  max-width: 64ch;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--ink-2);
+  /* The shutter. The row still opens by growing its track, which is what keeps
+     the height honest without a magic number; this uncovers the copy across
+     that opening instead of letting it simply be there once the space exists.
+     Slower than the expansion and on the in-out curve, so the text arrives
+     just behind the space it is arriving into.
+
+     A clip-path rather than a mask or an overlay: it paints nothing, so it
+     cannot disagree with the ink ground it sits on. */
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path var(--t-slow) var(--ease-io);
+}
+
+.stepBody[data-open='true'] .stepBodyInner p {
+  clip-path: inset(0 0 0 0);
+}
+
+@media (max-width: 640px) {
+  .stepHead { grid-template-columns: 2.2rem 1fr 1.5rem; }
+  .stepBodyInner p { padding-left: calc(2.2rem + var(--s-3)); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stepBody { transition: none; }
+  /* Open, not half-shuttered: the state still has to read, it just does not
+     travel to get there. */
+  .stepBodyInner p { clip-path: none; transition: none; }
+  .stepMark::before,
+  .stepMark::after { transition: none; }
+}

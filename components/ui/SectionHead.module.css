@@ -1,0 +1,27 @@
+.head {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: var(--s-4);
+  align-items: end;
+  padding-bottom: var(--s-5);
+}
+
+.lead {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+
+.title { max-width: 16ch; }
+
+.aside {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  align-items: flex-start;
+  padding-bottom: 0.4rem;
+}
+
+@media (max-width: 880px) {
+  .head { grid-template-columns: 1fr; align-items: start; }
+}

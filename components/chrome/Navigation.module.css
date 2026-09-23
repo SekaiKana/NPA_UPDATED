@@ -1,0 +1,266 @@
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 500;
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+.bar {
+  max-width: var(--measure);
+  margin-inline: auto;
+  height: var(--nav-h);
+  padding-inline: var(--gutter);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-3);
+}
+
+/* The rule draws itself in once the page moves, rather than the whole bar
+   acquiring a background — keeps the hero uninterrupted. */
+.rule {
+  display: block;
+  height: 1px;
+  background: var(--rule);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--t-slow) var(--ease);
+}
+
+.condensed .rule { transform: scaleX(1); }
+
+/* On the header, not the bar: the bar is capped at --measure, so putting the
+   ground on it leaves an unpainted gutter down each side at wide viewports. */
+.condensed {
+  background: color-mix(in srgb, var(--ground) 88%, transparent);
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+}
+
+/* While an ink-ground section is under the bar, the whole chrome inverts.
+   Redefining the tokens rather than overriding each rule means every child —
+   links, language toggle, burger, CTA — follows automatically. */
+.onDark {
+  --ink: #f0efec;
+  --ink-2: #a8a7a1;
+  --ink-3: #8b8a84;
+  --ground: #121212;
+  --rule: rgba(240, 239, 236, 0.18);
+  --rule-strong: rgba(240, 239, 236, 0.36);
+  color: #f0efec;
+}
+
+.onDark.condensed {
+  background: color-mix(in srgb, #121212 88%, transparent);
+}
+
+/* ---- Mark ---- */
+
+.mark {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  flex-shrink: 0;
+}
+
+.markGlyph {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.35rem;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+/* Set in the display serif rather than the mono. A serif will not carry the
+   0.3em tracking the monospace label wanted, so the spacing comes back to
+   something a text face can hold and the size comes up to match. */
+.markFull {
+  font-family: var(--font-display);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+
+/* ---- Links ---- */
+
+.links {
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+}
+
+.link {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+
+.link:hover { color: var(--ink); }
+
+.active { color: var(--ink); }
+.active::after { transform: scaleX(1); }
+
+/* ---- End cluster ---- */
+
+.end {
+  display: flex;
+  align-items: center;
+  gap: var(--s-3);
+  flex-shrink: 0;
+}
+
+.lang {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.12em;
+}
+
+.langOn { color: var(--ink); }
+.langOff { color: var(--ink-3); }
+.langOff:hover { color: var(--ink-2); }
+.langSlash { color: var(--rule-strong); }
+
+.ctaWrap { display: inline-block; }
+
+.cta {
+  display: inline-flex;
+  align-items: center;
+  height: 36px;
+  padding-inline: 1.15rem;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition: background var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
+}
+
+.cta:hover {
+  background: var(--ink);
+  color: var(--ground);
+}
+
+/* ---- Burger ---- */
+
+.burger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  width: 44px;
+  height: 44px;
+  padding-inline: 10px;
+}
+
+.burgerLine {
+  display: block;
+  height: 1px;
+  width: 100%;
+  background: var(--ink);
+  transition: transform var(--t-fast) var(--ease-io),
+    opacity var(--t-fast) var(--ease-io);
+}
+
+.bl1 { transform: translateY(3.5px) rotate(45deg); }
+.bl2 { transform: translateY(-3.5px) rotate(-45deg); }
+
+/* ---- Overlay ---- */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+  background: var(--ground-ink);
+  color: #f0efec;
+  visibility: hidden;
+  clip-path: inset(0 0 100% 0);
+  display: flex;
+  align-items: flex-end;
+}
+
+.overlayInner {
+  width: 100%;
+  padding: var(--gutter);
+  padding-top: calc(var(--nav-h) + env(safe-area-inset-top, 0px) + var(--s-4));
+  padding-bottom: calc(var(--gutter) + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+}
+
+.mLinks {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.mLink { overflow: hidden; }
+
+.mLinkInner {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  width: 100%;
+  text-align: left;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(2.5rem, 11vw, 5.5rem);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  color: #f0efec;
+  padding-block: 0.06em;
+}
+
+.mIndex {
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 0.625rem;
+  letter-spacing: 0.2em;
+  color: var(--accent-tint);
+}
+
+.overlayFoot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--s-2);
+  padding-top: var(--s-3);
+  border-top: 1px solid rgba(240, 239, 236, 0.18);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: #a8a7a1;
+}
+
+/* ---- Responsive ---- */
+
+@media (max-width: 1100px) {
+  .markFull { display: none; }
+  .links { gap: var(--s-3); }
+}
+
+@media (max-width: 880px) {
+  .links { display: none; }
+  .cta { display: none; }
+  .burger { display: flex; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay {
+    clip-path: none;
+    transition: none;
+  }
+  .overlay[hidden] { display: none; }
+  .rule { transform: scaleX(1); }
+}

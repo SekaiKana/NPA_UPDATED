@@ -1,0 +1,90 @@
+.row {
+  position: relative;
+  border-top: 1px solid var(--rule);
+}
+
+.row:last-child { border-bottom: 1px solid var(--rule); }
+
+.hit {
+  position: relative;
+  display: grid;
+  grid-template-columns: 4rem 1fr 14rem;
+  gap: var(--s-3);
+  align-items: baseline;
+  width: 100%;
+  text-align: left;
+  padding-block: var(--s-4);
+  color: inherit;
+}
+
+/* The plate that replaced the wipe, the indent, the arrow and the pop all
+   live in rowFx.module.css now — this file is back to being the row's
+   structure and type, and carries no hover rules of its own. */
+
+.index {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.16em;
+  /* Deepens toward ink as the row comes alive — the shift in emphasis that
+     goes with the scale pop in rowFx. Mixing rather than swapping keeps the
+     walnut hue, and keeps the resting colour exactly what it was: with `--on`
+     unset, which is every non-interactive row, this resolves to plain
+     `--accent`. It reads correctly inverted too, where `--ink` is near-white
+     and the same mix brightens instead of darkening. */
+  color: color-mix(in srgb, var(--accent), var(--ink) calc(var(--on, 0) * 45%));
+  font-variant-numeric: tabular-nums;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  min-width: 0;
+}
+
+.body {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--ink-2);
+  max-width: 52ch;
+}
+
+.meta {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-2);
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  color: var(--ink-3);
+  text-transform: uppercase;
+}
+
+.note {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.6rem;
+  border: 1px dashed var(--rule-strong);
+  border-radius: 2px;
+  letter-spacing: 0.12em;
+}
+
+.arrow {
+  font-size: 1.1rem;
+}
+
+.muted { opacity: 0.62; }
+
+@media (max-width: 880px) {
+  .hit {
+    grid-template-columns: 2.5rem 1fr;
+    grid-template-areas:
+      'index main'
+      '.     meta';
+    row-gap: var(--s-2);
+  }
+  .index { grid-area: index; }
+  .main { grid-area: main; }
+  .meta { grid-area: meta; justify-content: flex-start; gap: var(--s-3); }
+}

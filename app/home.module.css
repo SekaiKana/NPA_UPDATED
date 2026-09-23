@@ -1,0 +1,147 @@
+/* =============================================================
+   HOME
+   ============================================================= */
+
+.hero {
+  position: relative;
+  min-height: 100svh;
+  /* No background of its own. The dark stage is drawn by HeroBlob on the
+     shared canvas, which sits BEHIND the page: painting it here instead would
+     bury the blob under an opaque rectangle. The `invert` class on this
+     section supplies the light-on-dark type tokens to match. */
+  display: flex;
+  align-items: flex-end;
+  padding-top: calc(var(--nav-h) + var(--s-5));
+  padding-bottom: var(--s-6);
+  overflow: hidden;
+}
+
+.heroInner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+  width: 100%;
+}
+
+
+.heroTitle {
+  /* Each line is its own DisplayReveal, so the h1 is a stack of blocks. */
+  display: flex;
+  flex-direction: column;
+  margin-block: var(--s-2);
+}
+
+.heroAccent :global(.split-inner),
+.heroAccent {
+  color: var(--accent);
+  font-style: italic;
+  font-weight: 500;
+}
+
+/* One column since the scroll cue was removed; the second `auto` track it
+   used to occupy would otherwise sit empty and pull the rule short. */
+.heroFoot {
+  display: grid;
+  gap: var(--s-4);
+  align-items: end;
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--rule);
+}
+
+@keyframes trail {
+  0% { transform: translateY(0); opacity: 0; }
+  30% { opacity: 1; }
+  100% { transform: translateY(350%); opacity: 0; }
+}
+
+/* ---- Sections ---- */
+
+.section { padding-block: var(--s-8); }
+
+.asideLink {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.2rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.index { display: flex; flex-direction: column; }
+
+/* ---- The edge ---- */
+
+.approach {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: var(--s-6);
+  align-items: start;
+}
+
+.approachLead {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-3);
+}
+
+.approachTitle { max-width: 14ch; }
+
+.specPanel {
+  padding: var(--s-4);
+}
+
+/* The panel already draws the enclosing edge, so the list drops its own top
+   rule and its last divider. */
+.specs {
+  display: flex;
+  flex-direction: column;
+}
+
+.spec:last-child { border-bottom: 0; }
+.spec:last-child { padding-bottom: 0; }
+
+.spec {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: var(--s-2);
+  align-items: baseline;
+  padding-block: var(--s-3);
+  border-bottom: 1px solid var(--rule);
+}
+
+.specValue {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(3rem, 7vw, 5.5rem);
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  font-variant-numeric: lining-nums tabular-nums;
+}
+
+.specUnit {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.specLabel {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  text-align: right;
+}
+
+/* ---- Responsive ---- */
+
+@media (max-width: 880px) {
+  .hero { align-items: center; }
+  .approach { grid-template-columns: 1fr; gap: var(--s-5); }
+}

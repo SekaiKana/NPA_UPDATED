@@ -1,0 +1,150 @@
+.grid {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: var(--s-6);
+  align-items: start;
+}
+
+/* ---- Form ---- */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+  border-top: 1px solid var(--rule);
+  padding-top: var(--s-4);
+}
+
+.honey {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.labelRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--s-2);
+  cursor: pointer;
+}
+
+.req {
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* Underlined inputs rather than boxes — a filled box would fight the
+   hairline-rule structure the rest of the page is built from. */
+.input,
+.textarea {
+  width: 100%;
+  font-family: var(--font-sans);
+  font-size: 1.0625rem;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--rule-strong);
+  padding: 0.6rem 0;
+  transition: border-color var(--t-fast) var(--ease);
+}
+
+.input:hover,
+.textarea:hover { border-bottom-color: var(--ink-2); }
+
+.input:focus,
+.textarea:focus {
+  outline: none;
+  border-bottom-color: var(--accent);
+}
+
+.input:focus-visible,
+.textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+}
+
+.input:disabled,
+.textarea:disabled { opacity: 0.5; }
+
+.textarea {
+  resize: vertical;
+  min-height: 8rem;
+  line-height: 1.6;
+}
+
+.actions { margin-top: var(--s-2); }
+
+.submit {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.05rem 2.2rem;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  transition: background var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
+}
+
+.submit:hover:not(:disabled) {
+  background: var(--ink);
+  color: var(--ground);
+}
+
+.submit:disabled { opacity: 0.55; cursor: progress; }
+
+.submitArrow { transition: transform var(--t-mid) var(--ease); }
+.submit:hover:not(:disabled) .submitArrow { transform: translateX(6px); }
+
+.status {
+  min-height: 1.4em;
+  font-size: 0.9375rem;
+  color: var(--ink-2);
+}
+
+.statusError { color: #9c2b1c; }
+
+/* ---- Aside ---- */
+
+.aside {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-4);
+  border-top: 1px solid var(--rule);
+  padding-top: var(--s-4);
+}
+
+.asideBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.bigEmail {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: clamp(1.25rem, 2.4vw, 2rem);
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+  width: fit-content;
+  word-break: break-word;
+}
+
+@media (max-width: 880px) {
+  .grid { grid-template-columns: 1fr; gap: var(--s-5); }
+}

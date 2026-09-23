@@ -1,0 +1,104 @@
+/* =============================================================
+   THE CALIPER
+   A dimension annotation that travels between the rows of the
+   capabilities index.
+   ============================================================= */
+
+.wrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* The instrument. One element carrying everything, so the whole assembly
+   travels as a rigid object rather than as parts that happen to agree. */
+.caliper {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--t-fast) var(--ease);
+  /* Height and vertical position are written by GSAP. */
+}
+
+.on { opacity: 1; }
+
+/* The two jaws. Full width, hairline, and a shade stronger than the rules they
+   sit against so the measurement reads as drawn on top of the page rather than
+   as one more divider in it. */
+.jaw {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--accent);
+  opacity: 0.55;
+  transform-origin: left center;
+}
+
+.jawTop { top: 0; }
+.jawBottom { bottom: 0; }
+
+/* The extension line joining them, in the gutter left of the index number. */
+.stem {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 1px;
+  background: var(--accent);
+  opacity: 0.55;
+}
+
+/* Arrow ticks at each end of the stem, the way a dimension line is drawn. */
+.tick {
+  position: absolute;
+  left: -3px;
+  width: 7px;
+  height: 1px;
+  background: var(--accent);
+}
+
+.tickTop { top: 0; }
+.tickBottom { bottom: 0; }
+
+/* The readout sits just above the top jaw at the right, where the row's own
+   content has already ended, so it never lands on the copy.
+
+   Above the line rather than centred on it, and with nothing painted behind
+   it: a patch of flat `--ground` would have to sit on a page whose background
+   is a gradient with grain over it, and the seam shows. Clearing the line is
+   the honest way to keep the line from striking through the figures. */
+.readout {
+  position: absolute;
+  right: 0;
+  bottom: 100%;
+  padding-bottom: 0.3rem;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.readoutTotal { opacity: 0.5; }
+
+/* =============================================================
+   NARROW
+   The stem would sit in a gutter that no longer exists, and a
+   readout at this size crowds the row. The jaws alone still say
+   which row you are on, which is the part that matters.
+   ============================================================= */
+@media (max-width: 640px) {
+  .readout { display: none; }
+  .tick { left: -2px; width: 5px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* The travel is GSAP's and is already zeroed there; this is the fade. */
+  .caliper { transition: none; }
+}

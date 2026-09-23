@@ -1,0 +1,118 @@
+.footer {
+  position: relative;
+  z-index: 1;
+  padding-bottom: calc(var(--s-4) + env(safe-area-inset-bottom, 0px));
+}
+
+/* ---- Closing CTA ---- */
+
+.cta {
+  padding-block: var(--s-8) var(--s-7);
+  border-bottom: 1px solid var(--rule);
+}
+
+.ctaTitle {
+  margin-top: var(--s-3);
+  max-width: 14ch;
+}
+
+.ctaLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: var(--s-4);
+  padding: 1.1rem 2.2rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink);
+  transition: background var(--t-fast) var(--ease), color var(--t-fast) var(--ease),
+    border-color var(--t-fast) var(--ease);
+}
+
+.ctaLink:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.ctaArrow { transition: transform var(--t-mid) var(--ease); }
+.ctaLink:hover .ctaArrow { transform: translateX(6px); }
+
+/* ---- Grid ---- */
+
+.grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1.2fr;
+  gap: var(--s-4);
+  padding-block: var(--s-6) var(--s-5);
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  align-items: flex-start;
+}
+
+/* The mark art is dark-on-transparent, made for the bone ground; inverting
+   it is cheaper and sharper than shipping a second asset. */
+/* No `filter: invert(1)` here. The mark is walnut brown, and inverting brown
+   lands on pale blue — which is exactly the tint that kept showing up in the
+   footer. The light artwork is a separate file; use that instead. */
+.brandMark {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  opacity: 0.92;
+}
+
+.brandName {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.25rem;
+  letter-spacing: -0.01em;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+}
+
+.list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  font-size: 0.9375rem;
+}
+
+.email {
+  font-size: clamp(0.9375rem, 1.5vw, 1.15rem);
+  width: fit-content;
+  word-break: break-all;
+}
+
+/* ---- Baseline ---- */
+
+.base {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s-2);
+  justify-content: space-between;
+  padding-top: var(--s-3);
+  border-top: 1px solid var(--rule-faint);
+}
+
+@media (max-width: 880px) {
+  .grid { grid-template-columns: 1fr 1fr; }
+  .brand { grid-column: 1 / -1; }
+}
+
+@media (max-width: 560px) {
+  .grid { grid-template-columns: 1fr; }
+}

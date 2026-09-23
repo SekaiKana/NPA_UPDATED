@@ -1,0 +1,113 @@
+/* Only the body, and only while the custom cursor is live. Inputs, textareas
+   and anything with its own meaningful cursor keep theirs. */
+.hideNative,
+.hideNative a,
+.hideNative button {
+  cursor: none;
+}
+
+.hideNative input,
+.hideNative textarea,
+.hideNative select,
+.hideNative [contenteditable] {
+  cursor: auto;
+}
+
+.dot,
+.ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  pointer-events: none;
+  border-radius: 50%;
+  visibility: hidden;
+  opacity: 0;
+  /* GSAP writes x/y; the translate keeps the element centred on the point. */
+  margin-left: -50%;
+  margin-top: -50%;
+  transform-origin: center;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  margin-top: -3px;
+  background: var(--accent);
+  transition: width 0.3s var(--ease), height 0.3s var(--ease),
+    background 0.3s var(--ease), margin 0.3s var(--ease);
+}
+
+.ring {
+  width: 34px;
+  height: 34px;
+  margin-left: -17px;
+  margin-top: -17px;
+  border: 1px solid var(--rule-strong);
+  transition: width 0.45s var(--ease), height 0.45s var(--ease),
+    margin 0.45s var(--ease), border-color 0.45s var(--ease),
+    background 0.45s var(--ease);
+}
+
+/* Over anything interactive the ring opens up and the dot shrinks away. */
+.ring[data-state='expand'] {
+  width: 58px;
+  height: 58px;
+  margin-left: -29px;
+  margin-top: -29px;
+  border-color: var(--accent);
+}
+
+.dot[data-state='expand'] {
+  width: 3px;
+  height: 3px;
+  margin-left: -1.5px;
+  margin-top: -1.5px;
+}
+
+/* Over a work item the ring fills, ready to carry a "VIEW" label. */
+.ring[data-state='view'] {
+  width: 84px;
+  height: 84px;
+  margin-left: -42px;
+  margin-top: -42px;
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.dot[data-state='view'] {
+  width: 0;
+  height: 0;
+  margin-left: 0;
+  margin-top: 0;
+}
+
+/* ---- On ink ----
+   The dot and ring are position:fixed at the document root, so they never
+   inherit an `.invert` block's tokens the way in-flow content does. These
+   restate the light values explicitly. */
+.dot[data-ground='dark'] {
+  background: var(--accent-tint);
+}
+
+.ring[data-ground='dark'] {
+  border-color: rgba(240, 239, 236, 0.45);
+}
+
+.ring[data-ground='dark'][data-state='expand'] {
+  border-color: var(--accent-tint);
+}
+
+.ring[data-ground='dark'][data-state='view'] {
+  background: var(--accent-tint);
+  border-color: var(--accent-tint);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dot,
+  .ring { display: none; }
+  .hideNative,
+  .hideNative a,
+  .hideNative button { cursor: auto; }
+}

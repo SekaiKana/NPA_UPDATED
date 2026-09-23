@@ -1,0 +1,162 @@
+.wrap { position: relative; }
+
+.list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--rule);
+}
+
+.row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 4rem 1fr 15rem;
+  gap: var(--s-3);
+  align-items: start;
+  padding-block: var(--s-5);
+  border-bottom: 1px solid var(--rule);
+  transition: opacity var(--t-mid) var(--ease);
+}
+
+/* These rows have far more vertical padding than the compact ones, so the
+   shared plate would sit tight against copy that is nowhere near its edges.
+   Bled out sideways and pulled in vertically it frames the entry instead.
+
+   Two classes deep on purpose: the element carries this class and the shared
+   one, both single-class selectors, and the winner would otherwise come down
+   to which module the bundler happened to emit last. */
+.row .plate {
+  inset: var(--s-2) calc(var(--s-3) * -1);
+}
+
+/* Everything else in the list recedes while one row is hovered. Only on fine
+   pointers — on touch there is no hover and this would just dim the list. */
+@media (hover: hover) and (pointer: fine) {
+  .list:hover .row { opacity: 0.4; }
+  .list:hover .row:hover { opacity: 1; }
+  .list:hover .muted:hover { opacity: 0.72; }
+}
+
+.index {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.16em;
+  /* See the note in IndexRow.module.css: resolves to plain --accent at rest. */
+  color: color-mix(in srgb, var(--accent), var(--ink) calc(var(--on, 0) * 45%));
+  font-variant-numeric: tabular-nums;
+  padding-top: 0.45rem;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--s-2);
+  min-width: 0;
+}
+
+/* Indent, plate, index pop: all rowFx now, shared with every other list. */
+
+.summary {
+  font-size: 0.9375rem;
+  line-height: 1.62;
+  color: var(--ink-2);
+  max-width: 54ch;
+}
+
+.scope {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.2rem;
+}
+
+.tag {
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  padding: 0.3rem 0.7rem;
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.1em;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  padding-top: 0.3rem;
+}
+
+.metaRow {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--s-2);
+  border-bottom: 1px solid var(--rule-faint);
+  padding-bottom: 0.4rem;
+}
+
+.metaKey { color: var(--ink-3); opacity: 0.7; }
+
+.badge {
+  align-self: flex-start;
+  margin-top: 0.3rem;
+  padding: 0.35rem 0.6rem;
+  border: 1px dashed var(--rule-strong);
+  border-radius: 2px;
+  letter-spacing: 0.12em;
+  color: var(--ink-2);
+}
+
+.muted { opacity: 0.72; }
+
+/* ---- Floating preview ---- */
+
+.preview {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 300;
+  width: 320px;
+  height: 200px;
+  margin-left: -160px;
+  margin-top: -100px;
+  pointer-events: none;
+  visibility: hidden;
+  opacity: 0;
+  background: var(--ground-raised);
+  border: 1px solid var(--rule);
+  box-shadow: 0 40px 80px -40px rgba(18, 18, 18, 0.55);
+  overflow: hidden;
+}
+
+.previewImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.previewPlate {
+  width: 100%;
+  height: 100%;
+  color: var(--ink);
+}
+
+@media (max-width: 880px) {
+  .row {
+    grid-template-columns: 2.5rem 1fr;
+    grid-template-areas:
+      'index body'
+      '.     meta';
+    row-gap: var(--s-3);
+  }
+  .index { grid-area: index; }
+  .body { grid-area: body; }
+  .meta { grid-area: meta; }
+  .preview { display: none; }
+}

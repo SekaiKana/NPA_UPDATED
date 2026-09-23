@@ -1,287 +1,452 @@
-/* =============================================
-   DESIGN SYSTEM — Dark Premium Agency
-   ============================================= */
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+/* =============================================================
+   NPA — "BLUEPRINT"
+   Bone ground, ink black, one walnut brown. Oldstyle serif
+   display against wide-tracked monospace, structured by hairline
+   rules. The page should read like a technical drawing that
+   happens to be beautiful.
+   ============================================================= */
 
 :root {
-  /* Colors */
-  --bg: #050505;
-  --bg-elevated: rgba(255, 255, 255, 0.03);
-  --bg-glass: rgba(255, 255, 255, 0.04);
-  --border: rgba(255, 255, 255, 0.08);
-  --border-hover: rgba(255, 255, 255, 0.15);
-  --text-primary: #f0f0f0;
-  --text-secondary: rgba(255, 255, 255, 0.5);
-  --text-tertiary: rgba(255, 255, 255, 0.3);
-  --accent: #B87333;
-  --accent-glow: rgba(184, 115, 51, 0.18);
-  --accent-subtle: rgba(184, 115, 51, 0.10);
+  /* ---- Ground ----
+     Deliberately a mid bone, never white. A white page has no
+     material; this one does. */
+  --ground: #d6d3cd;
+  --ground-deep: #c9c5be;   /* sunken bands */
+  --ground-raised: #e2dfd9; /* lifted surfaces */
+  --ground-ink: #121212;    /* inverted sections */
 
-  /* Typography */
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-mono: 'Geist Mono', 'SF Mono', 'Fira Code', monospace;
+  /* ---- Ink ---- (ratios measured against --ground) */
+  --ink: #121212;      /* 13.8:1 */
+  --ink-2: #4a4a45;    /*  6.6:1  body */
+  --ink-3: #59594f;    /*  4.7:1  meta — AA, do not lighten */
 
-  /* Spacing */
-  --space-xs: 0.5rem;
-  --space-sm: 1rem;
-  --space-md: 1.5rem;
-  --space-lg: 2.5rem;
-  --space-xl: 4rem;
-  --space-2xl: 6rem;
-  --space-3xl: 10rem;
+  /* ---- Signal ----
+     Exactly one accent — walnut brown, the house colour — used
+     sparingly enough that it still means something when it appears. */
+  --accent: #6b4423;   /*  5.7:1 on --ground */
+  --accent-soft: rgba(107, 68, 35, 0.10);
+  /* The same hue lifted for dark grounds, where the walnut goes muddy.
+     8.0:1 on --ground-ink. Surfaces that paint their own ink background
+     without adopting the .invert token block reach for this directly. */
+  --accent-tint: #c9a37a;
 
-  /* Layout */
-  --max-width: 1200px;
-  --nav-height: 72px;
+  /* ---- Structure ---- */
+  --rule: rgba(18, 18, 18, 0.16);
+  --rule-strong: rgba(18, 18, 18, 0.32);
+  --rule-faint: rgba(18, 18, 18, 0.08);
 
-  /* Effects */
-  --glass-blur: 20px;
-  --glass-bg: rgba(10, 10, 10, 0.6);
-  --glass-border: rgba(255, 255, 255, 0.06);
-  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-slow: 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  /* ---- Type ----
+     EB Garamond and Nunito carry no Japanese glyphs. The JP stacks
+     keep the toggle serif-to-serif and sans-to-sans instead of
+     dropping to whatever the OS picks, at zero extra payload. */
+  --font-display: var(--font-garamond), 'Hiragino Mincho ProN', 'Yu Mincho',
+    'Noto Serif JP', Garamond, Georgia, serif;
+  --font-sans: var(--font-nunito), -apple-system, BlinkMacSystemFont,
+    'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Noto Sans JP', sans-serif;
+  --font-mono: var(--font-plex-mono), 'SF Mono', ui-monospace, monospace;
+
+  /* ---- Space ---- */
+  --s-1: 0.5rem;
+  --s-2: 1rem;
+  --s-3: 1.5rem;
+  --s-4: 2.5rem;
+  --s-5: 4rem;
+  --s-6: 6rem;
+  --s-7: 9rem;
+  --s-8: 14rem;
+
+  /* ---- Layout ---- */
+  --gutter: 2.5rem;
+  --measure: 1560px;
+  --nav-h: 72px;
+
+  /* ---- Motion ----
+     One expressive curve and one functional one. Everything on the
+     site uses one of these two, which is what makes the motion feel
+     choreographed rather than assorted. */
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-io: cubic-bezier(0.76, 0, 0.24, 1);
+  --t-fast: 0.3s;
+  --t-mid: 0.6s;
+  --t-slow: 1.1s;
+
+  /* ---- Springs ----
+     Sampled from a real damped spring rather than eyeballed as a bezier: a
+     bezier can only overshoot once and then settle, where these cross the
+     target and ring back the way the hero cluster does. That is the point of
+     having them — the row interactions and the physics in the canvas should
+     read as the same hand.
+
+     Declared here as beziers and upgraded to the sampled curves in the
+     @supports block below. Not as two declarations of the same property with
+     the fallback first: that is the usual trick and it does not work on a
+     custom property, because a custom property stores whatever it is given
+     without parsing it. The `linear()` would always win, and then fail at the
+     point of use in a browser that cannot read it, taking the timing function
+     with it. @supports is the only test that happens early enough.
+
+     --ease-spring     ~8% overshoot, for anything that moves a whole row.
+     --ease-spring-pop ~20%, for small parts — an arrow, an index number —
+                       where the same overshoot in absolute pixels is tiny
+                       and a bigger one is what makes it read as playful. */
+  --ease-spring: cubic-bezier(0.34, 1.35, 0.64, 1);
+  --ease-spring-pop: cubic-bezier(0.34, 1.8, 0.64, 1);
+  /* A spring has to be given time to ring or it just looks like a glitch;
+     this is the one duration the row interactions use. */
+  --t-spring: 0.62s;
 }
 
-/* =============================================
-   RESET & BASE
-   ============================================= */
-
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+@supports (animation-timing-function: linear(0, 1)) {
+  :root {
+    --ease-spring: linear(
+      0, 0.0641 3.8%, 0.2147 7.7%, 0.4009 11.5%, 0.5869 15.4%, 0.7507 19.2%,
+      0.8814 23.1%, 0.9761 26.9%, 1.0374 30.8%, 1.0708 34.6%, 1.083 38.5%,
+      1.0807 42.3%, 1.0697 46.2%, 1.0546 50%, 1.0388 53.8%, 1.0245 57.7%,
+      1.0127 61.5%, 1.004 65.4%, 0.9981 69.2%, 0.9947 73.1%, 0.9932 76.9%,
+      0.9931 80.8%, 0.9939 84.6%, 0.9951 88.5%, 0.9964 92.3%, 0.9976 96.2%, 1
+    );
+    --ease-spring-pop: linear(
+      0, 0.1135 3.8%, 0.3701 7.7%, 0.6615 11.5%, 0.9132 15.4%, 1.0875 19.2%,
+      1.1771 23.1%, 1.1954 26.9%, 1.1657 30.8%, 1.1125 34.6%, 1.0559 38.5%,
+      1.009 42.3%, 0.9781 46.2%, 0.9635 50%, 0.9622 53.8%, 0.9693 57.7%,
+      0.9801 61.5%, 0.991 65.4%, 0.9997 69.2%, 1.0051 73.1%, 1.0074 76.9%,
+      1.0073 80.8%, 1.0056 84.6%, 1.0035 88.5%, 1.0014 92.3%, 0.9998 96.2%, 1
+    );
+  }
 }
+
+/* =============================================================
+   RESET
+   ============================================================= */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 html {
-  scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  /* Lenis drives scrolling; native smooth would fight it. */
+  scroll-behavior: auto;
 }
 
 body {
   font-family: var(--font-sans);
-  background: var(--bg);
-  color: var(--text-primary);
+  background: var(--ground);
+  color: var(--ink);
+  font-size: 1rem;
   line-height: 1.6;
+  /* Nunito sets loose by default. A hair negative stops body copy drifting
+     wide next to the tightly tracked display and mono. */
+  letter-spacing: -0.006em;
   overflow-x: hidden;
   min-height: 100vh;
+  font-synthesis-weight: none;
 }
 
-a {
-  color: inherit;
-  text-decoration: none;
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
+img, svg, video, canvas { max-width: 100%; display: block; }
+::selection { background: var(--accent); color: var(--ground); }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
 }
 
-button {
-  font-family: inherit;
-  cursor: pointer;
-  border: none;
-  background: none;
-}
+/* Lenis */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-stopped { overflow: hidden; }
 
-/* =============================================
+/* =============================================================
    LAYOUT
-   ============================================= */
+   ============================================================= */
 
-.page-content {
+.page {
   position: relative;
   z-index: 1;
-  min-height: 100vh;
 }
 
-.container {
-  max-width: var(--max-width);
-  margin: 0 auto;
-  padding: 0 var(--space-lg);
+.shell {
+  width: 100%;
+  max-width: var(--measure);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
 }
 
-/* =============================================
-   GLASSMORPHISM
-   ============================================= */
+/* The hairline rules that structure every page. */
+.rule {
+  height: 1px;
+  background: var(--rule);
+  border: 0;
+  width: 100%;
+}
+
+.rule-faint { background: var(--rule-faint); }
+
+/* =============================================================
+   BACKDROP
+   The static ground that is always present. The WebGL stage layers
+   over it; when WebGL is unavailable, reduced-motion is set, or the
+   device is low-power, this IS the background and the page still
+   looks finished rather than blank.
+   ============================================================= */
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background:
+    radial-gradient(110% 80% at 15% 0%, rgba(168, 141, 110, 0.24) 0%, transparent 58%),
+    radial-gradient(90% 70% at 88% 18%, rgba(107, 68, 35, 0.10) 0%, transparent 60%),
+    radial-gradient(120% 90% at 50% 108%, rgba(122, 108, 92, 0.20) 0%, transparent 62%),
+    var(--ground);
+}
+
+/* Grain kills the banding that large soft gradients show on 8-bit
+   displays, and gives the bone a paper tooth. */
+.backdrop::after {
+  content: '';
+  position: absolute;
+  inset: -50%;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* =============================================================
+   TYPE
+   Display is an oldstyle serif: it wants size, leading a shade
+   looser than a Didone, and a whisper of negative tracking. It has
+   no optical-size axis, so weight does that job. Labels are the
+   opposite — tiny,
+   monospace, and tracked wide enough to read as an instrument
+   panel rather than as text.
+   ============================================================= */
+
+.display {
+  font-family: var(--font-display);
+  /* 500, not black. EB Garamond's heavy weights thicken the stems without
+     opening the counters, which turns large settings muddy; 500 keeps the
+     oldstyle colour while still holding its own at 11rem. */
+  font-weight: 500;
+  /* Garamond sits on a smaller x-height than a Didone, so identical numeric
+     leading reads tighter. 1.02 lands where 0.94 did optically. */
+  line-height: 1.02;
+  letter-spacing: -0.014em;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+.d-xl { font-size: clamp(3.5rem, 11vw, 11rem); }
+.d-lg { font-size: clamp(2.75rem, 7vw, 6rem); }
+.d-md { font-size: clamp(2rem, 4.2vw, 3.5rem); line-height: 1.06; }
+/* Small display gains weight rather than losing it: at 1.4rem the 500
+   hairlines start to break up. */
+.d-sm {
+  font-size: clamp(1.4rem, 2.2vw, 2rem);
+  line-height: 1.14;
+  font-weight: 600;
+  letter-spacing: -0.008em;
+}
+
+/* EB Garamond's italic is a true cursive with its own skeleton, not a slant.
+   It reads as emphasis on shape alone, so it takes the regular weight. */
+.display em,
+.accent-italic {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--accent);
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  font-weight: 400;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  line-height: 1.4;
+}
+
+.label-accent { color: var(--accent); }
+
+.meta {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+
+.body {
+  font-size: 1.0625rem;
+  line-height: 1.62;
+  color: var(--ink-2);
+  max-width: 38ch;
+  text-wrap: pretty;
+}
+
+.body-lg {
+  font-size: clamp(1.125rem, 1.6vw, 1.375rem);
+  line-height: 1.5;
+  color: var(--ink-2);
+  max-width: 30ch;
+  text-wrap: pretty;
+}
+
+/* =============================================================
+   INVERTED SECTIONS
+   A band of ink in the middle of the page. Used once or twice per
+   route, never more — it only works as punctuation.
+   ============================================================= */
+
+.invert {
+  background: var(--ground-ink);
+  --ink: #f0efec;
+  --ink-2: #a8a7a1;
+  --ink-3: #8b8a84;
+  --rule: rgba(240, 239, 236, 0.18);
+  --rule-faint: rgba(240, 239, 236, 0.09);
+  --rule-strong: rgba(240, 239, 236, 0.36);
+  /* The brown's tint, so the accent stays the same hue across the flip. */
+  --accent: var(--accent-tint);
+  /* Flipped too. The walnut at 10% is all but invisible on near-black, so
+     any surface using it as a hover plate simply stopped appearing inside an
+     inverted band. */
+  --accent-soft: rgba(201, 163, 122, 0.13);
+  color: var(--ink);
+}
+
+/* Takes the inverted palette but NOT the ink ground.
+   For sections whose dark ground is drawn in WebGL on the shared canvas,
+   which sits behind the page: an opaque background here would bury it. The
+   `.invert` class is kept so the navigation's observer still flips the bar.
+   Two classes deep so it outranks `.invert`'s own background. */
+.invert.invert-stage {
+  background: transparent;
+}
+
+/* =============================================================
+   GLASS
+   Two treatments, chosen per surface by GlassSurface:
+
+   [data-glass="css"]   backdrop-filter does the blurring. No real
+                        refraction, but it reads as glass and costs
+                        nothing unusual.
+   [data-glass="webgl"] GlassLayer draws true refraction, dispersion
+                        and rim light on the canvas behind; the
+                        element contributes only the plate the copy
+                        sits on. backdrop-filter is OFF here — it
+                        would blur the refraction it sits on and
+                        bill us twice.
+
+   --glass-milk is the legibility control: body copy measures against
+   this plate, never against the moving field underneath.
+   ============================================================= */
 
 .glass-card {
-  background: var(--glass-bg);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  border: 1px solid var(--glass-border);
-  border-radius: 16px;
-  transition: var(--transition);
+  position: relative;
+  background: rgba(233, 231, 226, var(--glass-milk, 0.58));
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.5) inset,
+    0 18px 40px -28px rgba(18, 18, 18, 0.5);
+  transition: background var(--t-mid) var(--ease),
+    border-color var(--t-mid) var(--ease),
+    transform var(--t-mid) var(--ease);
 }
 
-.glass-card:hover {
-  border-color: var(--border-hover);
-  background: rgba(15, 15, 15, 0.7);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 60px var(--accent-subtle);
+.glass-card[data-glass='css'],
+.glass-card:not([data-glass]) {
+  backdrop-filter: blur(16px) saturate(1.3);
+  -webkit-backdrop-filter: blur(16px) saturate(1.3);
 }
 
-/* =============================================
-   TYPOGRAPHY
-   ============================================= */
-
-.heading-xl {
-  font-size: clamp(2.5rem, 6vw, 5rem);
-  font-weight: 800;
-  line-height: 1.05;
-  letter-spacing: -0.03em;
-  color: var(--text-primary);
+.glass-card[data-glass='webgl'] {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
-.heading-lg {
-  font-size: clamp(1.5rem, 3vw, 2.5rem);
-  font-weight: 700;
-  line-height: 1.15;
-  letter-spacing: -0.02em;
+.invert .glass-card {
+  background: rgba(240, 239, 236, calc(var(--glass-milk, 0.58) * 0.13));
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.12) inset;
 }
 
-.heading-md {
-  font-size: clamp(1.1rem, 2vw, 1.5rem);
-  font-weight: 600;
-  line-height: 1.3;
-  letter-spacing: -0.01em;
+/* =============================================================
+   INTERACTIVE
+   ============================================================= */
+
+.link-u {
+  position: relative;
+  display: inline-block;
+  padding-block: 2px;
 }
 
-.text-body {
-  font-size: 1.05rem;
-  line-height: 1.7;
-  color: var(--text-secondary);
-}
-
-.text-small {
-  font-size: 0.875rem;
-  color: var(--text-tertiary);
-}
-
-.text-mono {
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-
-/* =============================================
-   BUTTONS
-   ============================================= */
-
-.btn-primary {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 1rem 2.25rem;
-  background: var(--text-primary);
-  color: var(--bg);
-  font-size: 0.95rem;
-  font-weight: 600;
-  border-radius: 60px;
-  transition: var(--transition);
-  letter-spacing: -0.01em;
-}
-
-.btn-primary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 0 40px rgba(255, 255, 255, 0.15);
-}
-
-.btn-primary .arrow {
-  transition: transform 0.3s ease;
-}
-
-.btn-primary:hover .arrow {
-  transform: translateX(4px);
-}
-
-.btn-secondary {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.85rem 1.75rem;
-  background: transparent;
-  color: var(--text-primary);
-  font-size: 0.9rem;
-  font-weight: 500;
-  border: 1px solid var(--border);
-  border-radius: 60px;
-  transition: var(--transition);
-}
-
-.btn-secondary:hover {
-  border-color: var(--border-hover);
-  background: var(--bg-elevated);
-}
-
-/* =============================================
-   SECTION UTILITIES
-   ============================================= */
-
-.section {
-  padding: var(--space-3xl) 0;
-}
-
-.section-label {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--accent);
-  margin-bottom: var(--space-md);
-}
-
-.section-divider {
-  width: 100%;
+.link-u::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
   height: 1px;
-  background: var(--border);
-  border: none;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform var(--t-mid) var(--ease);
 }
 
-/* =============================================
-   ANIMATIONS
-   ============================================= */
+.link-u:hover::after { transform: scaleX(1); transform-origin: left; }
 
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+/* =============================================================
+   MOTION PRIMITIVES
+   Reveal state is driven by a data attribute so GSAP, the
+   IntersectionObserver fallback and reduced-motion all write to
+   the same surface.
+   ============================================================= */
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 20px var(--accent-subtle); }
-  50% { box-shadow: 0 0 40px var(--accent-glow); }
-}
-
-.animate-in {
-  animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+[data-reveal] {
   opacity: 0;
+  will-change: opacity, transform;
 }
 
-.animate-in-delay-1 { animation-delay: 0.1s; }
-.animate-in-delay-2 { animation-delay: 0.2s; }
-.animate-in-delay-3 { animation-delay: 0.3s; }
-.animate-in-delay-4 { animation-delay: 0.4s; }
-.animate-in-delay-5 { animation-delay: 0.5s; }
+[data-reveal='shown'] {
+  opacity: 1;
+}
 
-/* =============================================
+/* Per-line display reveals. */
+.split-line { display: block; overflow: hidden; }
+.split-inner { display: block; will-change: transform; }
+
+/* =============================================================
+   REDUCED MOTION
+   The WebGL stage never mounts under this query (handled in JS).
+   Everything here covers the CSS-driven half. Content is never
+   left hidden behind an animation that will not run.
+   ============================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  [data-reveal] { opacity: 1 !important; transform: none !important; }
+  .split-inner { transform: none !important; }
+}
+
+/* =============================================================
    RESPONSIVE
-   ============================================= */
+   ============================================================= */
 
-@media (max-width: 768px) {
-  :root {
-    --space-3xl: 6rem;
-    --nav-height: 64px;
-  }
+@media (max-width: 1024px) {
+  :root { --gutter: 1.5rem; --s-8: 9rem; --s-7: 6rem; }
+}
 
-  .container {
-    padding: 0 var(--space-sm);
-  }
+@media (max-width: 640px) {
+  :root { --gutter: 1.15rem; --s-8: 6rem; --s-7: 4.5rem; --s-6: 3.5rem; --nav-h: 60px; }
+  .label { letter-spacing: 0.3em; }
+  .body { max-width: none; }
 }

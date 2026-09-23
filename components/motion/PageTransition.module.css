@@ -1,0 +1,30 @@
+.curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 8000;
+  background: var(--ground-ink);
+  /* Parked position is set by GSAP (yPercent), never here. A base
+     `transform: translateY(100%)` would be read back as a pixel offset and
+     ADDED to yPercent, so the curtain parked at 200% and its covered state
+     (yPercent 0) landed a full viewport below the fold — it never covered
+     anything. `visibility: hidden` alone keeps it out of sight until the
+     first transition sets it. */
+  visibility: hidden;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.curtainMark {
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: clamp(3rem, 12vw, 10rem);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: #f0efec;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .curtain { display: none; }
+}
