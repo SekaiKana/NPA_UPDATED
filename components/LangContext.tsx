@@ -204,6 +204,9 @@ const translations: Record<string, Record<Lang, string>> = {
     JP: '厳格なアーキテクチャ、かつてないスピード、そして妥協なき品質。NPAはこの3つを極限まで追求することで、企業固有の業務課題を「独自のソフトウェア」という強力な武器へ、そして揺るぎない競争優位性へと昇華させます。',
   },
 
+  /* A proper noun, so it does not translate. */
+  'studio.linkedin': { EN: 'LinkedIn', JP: 'LinkedIn' },
+
   'studio.team.label': { EN: 'Team', JP: 'チーム' },
   'studio.team.title': { EN: 'Meet the Team', JP: '経営陣・リードエンジニア' },
   'studio.m1.title': { EN: 'Co-CEO / Lead Engineer', JP: '共同代表 / リードエンジニア' },

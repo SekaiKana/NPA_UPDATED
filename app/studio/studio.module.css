@@ -13,7 +13,10 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: var(--s-4) var(--s-3);
-  align-items: start;
+  /* Stretched, not `start`. The bios are different lengths, and equal-height
+     columns are what lets each entry push its link to the bottom so the four
+     line up across the row instead of stepping down with the copy. */
+  align-items: stretch;
 }
 
 .member {
@@ -49,6 +52,42 @@
   font-size: 0.875rem;
   line-height: 1.66;
   color: var(--ink-2);
+}
+
+/* Set in the metadata register rather than as body text, so it reads as a
+   reference attached to the entry instead of as the last line of the bio.
+   `margin-top: auto` pins it to the bottom of its column, which keeps the four
+   links on one line across the row even though the bios are different lengths. */
+.memberLink {
+  align-self: flex-start;
+  margin-top: auto;
+  padding-top: var(--s-2);
+  display: inline-flex;
+  /* Centred rather than on the baseline. A baseline-aligned inline SVG sits on
+     the baseline by its bottom edge, which hangs the whole bug above the
+     x-height of a line set in small caps and makes it read as a superscript. */
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  transition: color var(--t-fast) var(--ease);
+}
+
+.memberLink:hover,
+.memberLink:focus-visible { color: var(--accent); }
+
+/* Sized off the label rather than in `em`: the label is 9px, and a bug drawn
+   at 9px loses the counters in the letterforms and turns into a smudge. Just
+   above cap height is as small as it survives. `flex: none` because a flex
+   item's default is to shrink, and an SVG with no intrinsic width is exactly
+   the thing that does. */
+.memberMark {
+  flex: none;
+  width: 0.8rem;
+  height: 0.8rem;
 }
 
 @media (max-width: 1080px) {

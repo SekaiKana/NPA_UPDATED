@@ -4,6 +4,7 @@ import { useLang } from '@/components/LangContext';
 import Reveal from '@/components/motion/Reveal';
 import FloatingText from '@/components/motion/FloatingText';
 import FogReveal from '@/components/ui/FogReveal';
+import LinkedInMark from '@/components/ui/LinkedInMark';
 import DisplayReveal from '@/components/motion/DisplayReveal';
 import SectionHead from '@/components/ui/SectionHead';
 import IndexRow from '@/components/ui/IndexRow';
@@ -14,10 +15,21 @@ import styles from './studio.module.css';
 
 const PRINCIPLES = ['1', '2', '3'] as const;
 
-const TEAM = [
-  { name: 'Sekai Kanamori', key: 'm1' },
-  { name: 'Ryo Kitano', key: 'm2' },
-  { name: 'Kosei Nakamura', key: 'm3' },
+/* `linkedin` is optional and Rentaro has none on purpose: no profile was
+   given for him, and a guessed URL on a named person is worse than no link. */
+const TEAM: { name: string; key: string; linkedin?: string }[] = [
+  {
+    name: 'Sekai Kanamori',
+    key: 'm1',
+    // Supplied without a scheme; an href without one is read as a relative path.
+    linkedin: 'https://www.linkedin.com/in/sekaimiller',
+  },
+  { name: 'Ryo Kitano', key: 'm2', linkedin: 'https://www.linkedin.com/in/ryo-kitano/' },
+  {
+    name: 'Kosei Nakamura',
+    key: 'm3',
+    linkedin: 'https://www.linkedin.com/in/kosei-nakamura-5a27b935b/',
+  },
   { name: 'Rentaro Sato', key: 'm4' },
 ];
 
@@ -88,6 +100,22 @@ export default function StudioPage() {
               <h3 className={`display d-sm ${styles.memberName}`}>{member.name}</h3>
               <p className={styles.memberRole}>{t(`studio.${member.key}.title`)}</p>
               <p className={styles.memberBio}>{t(`studio.${member.key}.bio`)}</p>
+              {member.linkedin ? (
+                <a
+                  className={styles.memberLink}
+                  href={member.linkedin}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  /* Four entries would otherwise give a screen reader four
+                     links all called "LinkedIn" with nothing to tell them
+                     apart. The visible label stays short. */
+                  aria-label={`${member.name} on LinkedIn`}
+                >
+                  <LinkedInMark className={styles.memberMark} />
+                  <span className="link-u">{t('studio.linkedin')}</span>
+                  <span aria-hidden="true"> &#8599;</span>
+                </a>
+              ) : null}
             </Reveal>
           ))}
         </div>
