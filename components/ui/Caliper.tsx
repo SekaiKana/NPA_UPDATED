@@ -258,6 +258,13 @@ export default function Caliper({
         <span className={styles.stem} />
         <span className={`${styles.tick} ${styles.tickTop}`} />
         <span className={`${styles.tick} ${styles.tickBottom}`} />
+        {/* The closing side. Drawn only where the readout is not — see the
+            narrow block in the stylesheet. */}
+        <span className={`${styles.stem} ${styles.stemRight}`} />
+        <span className={`${styles.tick} ${styles.tickTop} ${styles.tickRight}`} />
+        <span
+          className={`${styles.tick} ${styles.tickBottom} ${styles.tickRight}`}
+        />
         <span className={styles.readout}>
           <span ref={readoutRef}>001</span>
           <span className={styles.readoutTotal}>

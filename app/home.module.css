@@ -5,10 +5,14 @@
 .hero {
   position: relative;
   min-height: 100svh;
-  /* No background of its own. The dark stage is drawn by HeroBlob on the
-     shared canvas, which sits BEHIND the page: painting it here instead would
-     bury the blob under an opaque rectangle. The `invert` class on this
-     section supplies the light-on-dark type tokens to match. */
+  /* No background of its own. The dark stage is a plane in `HeroClump`, drawn
+     on the shared canvas, which sits BEHIND the page: painting it here instead
+     would bury the cluster under an opaque rectangle. The `invert` class on
+     this section supplies the light-on-dark type tokens to match.
+
+     Which means the ground and the cluster arrive together and leave together.
+     See the phone rule further down, which is what puts the ground back where
+     the cluster does not run. */
   display: flex;
   align-items: flex-end;
   padding-top: calc(var(--nav-h) + var(--s-5));
@@ -193,8 +197,16 @@
 
    Sits above the shared canvas and below `.heroInner`, which
    already carries `z-index: 1`.
+
+   The band is bounded at both ends. Below 721px there is no
+   cluster to scrim — `HeroField` does not register the hero at
+   all there, for the reasons set out in that file — and laying
+   0.9 black over the lower hero anyway would only flatten the
+   gradient field into a dead panel. The lower bound has to track
+   `NO_HERO` in `components/webgl/HeroField.tsx`; they are the
+   same threshold stated twice because one is CSS and one is JS.
    ============================================================= */
-@media (max-width: 1099px) {
+@media (min-width: 721px) and (max-width: 1099px) {
   .hero::before {
     content: '';
     position: absolute;
@@ -208,6 +220,32 @@
       rgba(18, 18, 18, 0.82) 38%,
       rgba(18, 18, 18, 0.9) 100%
     );
+  }
+}
+
+/* =============================================================
+   THE HERO WITHOUT THE CLUSTER
+   Below this width `HeroField` does not register the hero at all,
+   so `HeroClump` never mounts — and the dark stage is a mesh
+   inside `HeroClump`, not a background on this section. Losing
+   the spheres therefore also loses the ground under them, and
+   `invert`'s light type is left on the bone page, which is the
+   one arrangement on the site that cannot be read.
+
+   So the ground comes back as paint. Flat `--ground-ink` rather
+   than an imitation of the lit plane: it is the same ink every
+   other inverted band on the site is set on, and on a phone the
+   difference between that and a plane under four soft lights is
+   not visible anyway.
+
+   Three classes deep because `.invert.invert-stage` in globals is
+   what clears the background, and it has to be outranked rather
+   than raced. The threshold tracks `NO_HERO` in
+   `components/webgl/HeroField.tsx`.
+   ============================================================= */
+@media (max-width: 720px) {
+  .hero:global(.invert.invert-stage) {
+    background: var(--ground-ink);
   }
 }
 

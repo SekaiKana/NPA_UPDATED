@@ -53,6 +53,14 @@
   opacity: 0.55;
 }
 
+/* The closing line on the other side, and the ticks that go with it. Off by
+   default: see the narrow block at the foot of this file for why they exist at
+   all, and why they only exist there. */
+.stemRight,
+.tickRight {
+  display: none;
+}
+
 /* Arrow ticks at each end of the stem, the way a dimension line is drawn. */
 .tick {
   position: absolute;
@@ -96,6 +104,26 @@
 @media (max-width: 640px) {
   .readout { display: none; }
   .tick { left: -2px; width: 5px; }
+
+  /* Losing the readout is what makes the second line necessary.
+
+     On a wide screen this is a dimension annotation and is meant to be open on
+     the right: the jaws run out to the figures, and the figures are what ends
+     the measurement. Take the figures away and the same drawing is three sides
+     of a rectangle stopping in mid-air, which does not read as an open
+     annotation — it reads as a box that failed to finish painting. Closing it
+     costs one hairline and turns the ambiguity into an obvious intent. */
+  .stemRight {
+    display: block;
+    left: auto;
+    right: 0;
+  }
+
+  .tickRight {
+    display: block;
+    left: auto;
+    right: -2px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
