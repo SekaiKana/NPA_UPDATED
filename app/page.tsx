@@ -13,8 +13,19 @@ import CountUp from '@/components/motion/CountUp';
 import GlassSurface from '@/components/glass/GlassSurface';
 import styles from './home.module.css';
 
-/** The three the homepage leads with; /capabilities carries all six. */
+/** The three the homepage leads with; /capabilities carries the rest. */
 const LEAD_CAPABILITIES = ['1', '2', '3'] as const;
+
+/**
+ * The one shown cut off underneath, as a hint that the list continues.
+ *
+ * Interactive sites rather than whichever key happens to be next, because the
+ * teaser is the only capability a visitor sees without clicking through, and
+ * this is the one worth spending it on. The row's number is its position in
+ * the homepage's own short list, not its position on the capabilities page;
+ * the two have never matched and do not need to.
+ */
+const TEASED_CAPABILITY = '7';
 
 const SPECS = ['1', '2', '3'] as const;
 
@@ -74,12 +85,30 @@ export default function Home() {
           {LEAD_CAPABILITIES.map((n, i) => (
             <IndexRow
               key={n}
-              index={String(i + 1).padStart(3, '0')}
+              index={String(i + 1)}
               title={t(`cap.${n}.title`)}
               body={t(`cap.${n}.desc`)}
               onActivate={() => navigate('/capabilities')}
             />
           ))}
+
+          {/* The list running off the bottom of the section: a fourth row,
+              clipped and faded out, to say there is more without offering it.
+
+              `muted` is what makes it read as a preview rather than a row that
+              has failed to work — it drops the hover response, the arrow and
+              the view cursor, so there is no affordance to be disappointed by.
+              `aria-hidden` because it is a duplicate of content the link
+              beside the heading already reaches, and a screen reader should be
+              sent there rather than through half a row. */}
+          <div className={styles.moreHint} aria-hidden="true">
+            <IndexRow
+              index={String(LEAD_CAPABILITIES.length + 1)}
+              title={t(`cap.${TEASED_CAPABILITY}.title`)}
+              body={t(`cap.${TEASED_CAPABILITY}.desc`)}
+              muted
+            />
+          </div>
         </div>
       </section>
 

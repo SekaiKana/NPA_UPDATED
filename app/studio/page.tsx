@@ -1,24 +1,24 @@
 'use client';
 
-import Image from 'next/image';
 import { useLang } from '@/components/LangContext';
 import Reveal from '@/components/motion/Reveal';
 import FloatingText from '@/components/motion/FloatingText';
+import FogReveal from '@/components/ui/FogReveal';
 import DisplayReveal from '@/components/motion/DisplayReveal';
 import SectionHead from '@/components/ui/SectionHead';
 import IndexRow from '@/components/ui/IndexRow';
+import Caliper from '@/components/ui/Caliper';
 import Commitment from '@/components/studio/Commitment';
-import ContactSheet from '@/components/studio/ContactSheet';
 import shell from '../page-shell.module.css';
 import styles from './studio.module.css';
 
 const PRINCIPLES = ['1', '2', '3'] as const;
 
 const TEAM = [
-  { image: '/IMG_Sekai.jpeg', name: 'Sekai Kanamori', key: 'm1' },
-  { image: '/IMG_Ryo.png', name: 'Ryo Kitano', key: 'm2' },
-  { image: '/IMG_Kosei.jpg', name: 'Kosei Nakamura', key: 'm3' },
-  { image: '/IMG_Rentaroo.jpg', name: 'Rentaro Sato', key: 'm4' },
+  { name: 'Sekai Kanamori', key: 'm1' },
+  { name: 'Ryo Kitano', key: 'm2' },
+  { name: 'Kosei Nakamura', key: 'm3' },
+  { name: 'Rentaro Sato', key: 'm4' },
 ];
 
 export default function StudioPage() {
@@ -37,7 +37,11 @@ export default function StudioPage() {
             </DisplayReveal>
           </div>
           <Reveal delay={0.12} className={shell.lead}>
-            <FloatingText className="body" text={t('studio.desc')} />
+            {/* The haze the cursor wipes clear. Inside the reveal, so the
+                paragraph is what it blurs. */}
+            <FogReveal>
+              <FloatingText className="body" text={t('studio.desc')} />
+            </FogReveal>
           </Reveal>
         </div>
       </header>
@@ -47,16 +51,24 @@ export default function StudioPage() {
         <Reveal>
           <span className="label">{t('studio.principles.label')}</span>
         </Reveal>
-        <Reveal className={styles.principles} stagger={0.07}>
-          {PRINCIPLES.map((n, i) => (
-            <IndexRow
-              key={n}
-              index={String(i + 1).padStart(3, '0')}
-              title={t(`studio.p${n}.title`)}
-              body={t(`studio.p${n}.desc`)}
-            />
-          ))}
-        </Reveal>
+        {/* The same instrument the capabilities index carries, so a numbered
+            list behaves the same way wherever it appears on the site. */}
+        <Caliper
+          total={PRINCIPLES.length}
+          className={styles.principles}
+          revision={PRINCIPLES.map((n) => t(`studio.p${n}.title`)).join('|')}
+        >
+          <Reveal stagger={0.07}>
+            {PRINCIPLES.map((n, i) => (
+              <IndexRow
+                key={n}
+                index={String(i + 1)}
+                title={t(`studio.p${n}.title`)}
+                body={t(`studio.p${n}.desc`)}
+              />
+            ))}
+          </Reveal>
+        </Caliper>
       </section>
 
       {/* ---------- COMMITMENT ---------- */}
@@ -66,28 +78,19 @@ export default function StudioPage() {
       <section className={`shell ${shell.section}`}>
         <SectionHead label={t('studio.team.label')} title={t('studio.team.title')} />
 
-        <ContactSheet className={styles.team}>
+        <div className={styles.team}>
           {TEAM.map((member, i) => (
             <Reveal key={member.name} delay={i * 0.06} className={styles.member}>
-              <div className={styles.portrait}>
-                <Image
-                  src={member.image}
-                  alt={member.name}
-                  width={520}
-                  height={650}
-                  className={styles.portraitImg}
-                  sizes="(max-width: 880px) 50vw, 25vw"
-                />
-                <span className={styles.portraitIndex}>
-                  {String(i + 1).padStart(2, '0')}
-                </span>
-              </div>
+              {/* The index used to sit on the portrait. With the photographs
+                  gone it heads the entry, which is where the rest of the site
+                  puts a number anyway. */}
+              <span className={styles.memberIndex}>{String(i + 1)}</span>
               <h3 className={`display d-sm ${styles.memberName}`}>{member.name}</h3>
               <p className={styles.memberRole}>{t(`studio.${member.key}.title`)}</p>
               <p className={styles.memberBio}>{t(`studio.${member.key}.bio`)}</p>
             </Reveal>
           ))}
-        </ContactSheet>
+        </div>
       </section>
     </>
   );

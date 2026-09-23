@@ -141,6 +141,15 @@ const translations: Record<string, Record<Lang, string>> = {
     EN: 'Translating raw data into strategic leverage. We engineer quantitative models, statistical reporting tools, and interactive dashboards to give you total operational visibility.',
     JP: '生のデータを、戦略的な競争優位性へと昇華させる。定量モデルの構築、統計的レポーティングツール、そして直感的なインタラクティブ・ダッシュボードの設計。事業運営のあらゆる側面を可視化し、データに基づいた意思決定（データドリブン）を加速させます。',
   },
+  /* TODO(copy): mine to propose, yours to approve, both languages. Written to
+     the same shape as the other six: a title in the "X & Y" form, then two
+     sentences that say what is built and what it is built for. */
+  'cap.7.title': { EN: 'Interactive Sites & Experiences', JP: 'インタラクティブサイト ＆ 体験設計' },
+  'cap.7.desc': {
+    EN: 'State of the art websites built as experiences rather than templates. Real time 3D, physics and motion, engineered to stay fast on every device and to read as a product rather than a brochure.',
+    JP: 'テンプレートではなく「体験」として構築する、最先端のウェブサイト。リアルタイム3D、物理演算、モーションを駆使しながら、あらゆるデバイスで軽快に動作し、パンフレットではなく「プロダクト」としての完成度を実現します。',
+  },
+
   'cap.6.title': { EN: 'Rapid MVP Prototyping', JP: '高速MVPプロトタイピング' },
   'cap.6.desc': {
     EN: 'Have a new business initiative? Our highly accelerated engineering workflows allow us to take your concept to a production-ready MVP in a fraction of the traditional timeline.',
@@ -198,14 +207,19 @@ const translations: Record<string, Record<Lang, string>> = {
   'studio.team.label': { EN: 'Team', JP: 'チーム' },
   'studio.team.title': { EN: 'Meet the Team', JP: '経営陣・リードエンジニア' },
   'studio.m1.title': { EN: 'Co-CEO / Lead Engineer', JP: '共同代表 / リードエンジニア' },
+  /* TODO(copy): the EN is yours, verbatim. The JP is my translation of it and
+     needs your eye before it ships — it now names real employers, and a
+     mistranslated affiliation is a different class of mistake from an awkward
+     sentence. */
   'studio.m1.bio': {
-    EN: 'Lead Engineer specializing in AI and machine learning architectures and rapid MVP deployment. With a background in quantitative financial modeling and experience as a former AI startup founder, Sekai bridges the gap between research and production, building systems designed for both speed and scale.',
-    JP: 'AI・機械学習アーキテクチャ、および高速MVP開発を専門とするリードエンジニア。計量ファイナンスにおけるモデリングや、AIスタートアップ創業者としての経験をバックグラウンドに持ち、先端研究と実運用の「最適解」を導き出すスペシャリスト。スピードとスケーラビリティを最高次元で両立するシステムを構築します。',
+    EN: 'Lead Engineer, specializing in AI/ML architectures and rapid MVP deployment. With a background in quantitative financial modeling and experience as an AI startup founder, Sekai bridges research and production, building systems for both speed and scale. He splits his time between the studio and Applied Research Engineering at Sakana AI, with prior experience applying AI to finance at Neuberger Berman.',
+    JP: 'AI・機械学習アーキテクチャ、および高速MVP開発を専門とするリードエンジニア。計量ファイナンスにおけるモデリングや、AIスタートアップ創業者としての経験をバックグラウンドに持ち、先端研究と実運用を架橋し、スピードとスケーラビリティを両立するシステムを構築します。現在はNPAと並行して、Sakana AIにてApplied Research Engineeringに従事。前職のNeuberger Bermanでは、金融領域へのAI適用に取り組みました。',
   },
-  'studio.m2.title': { EN: 'Co-CEO / Lead Application Engineer', JP: '共同代表 / リードアプリケーションエンジニア' },
+  'studio.m2.title': { EN: 'Technical Lead', JP: 'テクニカルリード' },
+  /* TODO(copy): as above, the EN is yours and the JP is mine to be checked. */
   'studio.m2.bio': {
-    EN: 'Lead Application Engineer specializing in full stack development and intuitive user interfaces. With a strong mathematical background from the University of Waterloo and extensive experience building software in competitive fast paced environments, Ryo creates high performance applications and translates complex backend logic into seamless, production ready user experiences.',
-    JP: 'フルスタック開発と直感的なUI構築を専門とするリード・アプリケーション・エンジニア。ウォータールー大学で培った高度な数学的素養と、スピード感が求められる競争の激しい環境での豊富な開発経験を融合。複雑なバックエンド・ロジックを、洗練されたシームレスなユーザー体験（UX）へと昇華させ、実戦的な高パフォーマンス・アプリケーションを構築します。',
+    EN: 'Lead Application Engineer, specializing in full stack development and intuitive user interfaces. With a strong mathematical background from the University of Waterloo and extensive experience building software in competitive fast paced environments, Ryo creates high performance applications and translates complex backend logic into seamless, production ready user experiences. He also has experience as an AI Engineer at AISTGroup, working with machine learning and computer vision.',
+    JP: 'フルスタック開発と直感的なUI構築を専門とするリード・アプリケーション・エンジニア。ウォータールー大学で培った高度な数学的素養と、スピード感が求められる競争の激しい環境での豊富な開発経験を融合。複雑なバックエンド・ロジックを、洗練されたシームレスなユーザー体験（UX）へと昇華させ、実戦的な高パフォーマンス・アプリケーションを構築します。また、AISTGroupではAIエンジニアとして、機械学習およびコンピュータビジョンの開発に従事しました。',
   },
   'studio.m3.title': { EN: 'Co-CEO / Product Strategist', JP: '共同代表 / プロダクトストラテジスト' },
   'studio.m3.bio': {

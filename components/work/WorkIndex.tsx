@@ -77,7 +77,7 @@ export default function WorkIndex({ items }: { items: WorkItem[] }) {
           >
             <span className={`${styles.plate} ${fx.plate}`} aria-hidden="true" />
             <span className={`${styles.index} ${fx.index}`}>
-              {String(i + 1).padStart(3, '0')}
+              {String(i + 1)}
             </span>
 
             <span className={styles.body}>

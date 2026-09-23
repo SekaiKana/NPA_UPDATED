@@ -4,89 +4,35 @@
   margin-top: var(--s-3);
 }
 
-/* ---- Team ---- */
+/* ---- Team ----
+   Set as text since the photographs came out. Everything that dressed a
+   portrait — the frame, the grayscale-to-colour pass, the contact-sheet
+   dimming and the in-frame parallax that went with it — went with them. */
 
 .team {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: var(--s-4) var(--s-3);
+  align-items: start;
 }
 
 .member {
   display: flex;
   flex-direction: column;
-  gap: 0.55rem;
-  /* Filter, not opacity. Every member is wrapped in `Reveal`, which hands its
-     opacity to GSAP and leaves an inline `opacity: 1` behind once the entry
-     tween finishes — and an inline style beats any rule in this file, so a
-     stylesheet that dims with opacity here simply never applies. */
-  transition: filter var(--t-mid) var(--ease);
+  gap: 0.5rem;
+  /* A ruled entry rather than a framed one: without an image the column needs
+     something to sit against, and a hairline is what the rest of the site
+     divides things with. */
+  padding-top: var(--s-2);
+  border-top: 1px solid var(--rule);
 }
 
-.portrait {
-  position: relative;
-  aspect-ratio: 4 / 5;
-  overflow: hidden;
-  background: var(--ground-deep);
-  border: 1px solid var(--rule);
-  margin-bottom: var(--s-2);
-}
-
-.portraitImg {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  /* Four photographs taken in four different places read as one set only if
-     they are desaturated to a common register; colour returns on hover. */
-  filter: grayscale(1) contrast(1.05);
-  /* One transform, composed from three custom properties that ContactSheet
-     writes. Declaring it once here rather than letting JavaScript set
-     `transform` directly is what keeps the drift and the scale from
-     overwriting each other: there is only ever one owner of this property.
-
-     Deliberately no transition on it either. The drift is eased in the loop
-     that sets the properties, and a transition on top would be a second,
-     slower easing fighting the first. */
-  transform: translate3d(var(--px, 0px), var(--py, 0px), 0) scale(var(--pscale, 1));
-  transition: filter var(--t-slow) var(--ease);
-}
-
-.member:hover .portraitImg {
-  filter: grayscale(0) contrast(1);
-}
-
-/* ---- The contact sheet ----
-   While one frame is being looked at the others recede, the way the rest of a
-   contact sheet falls away under a loupe. Only on a real pointer: on a touch
-   screen `:hover` sticks to whatever was tapped last and the set would be left
-   with three frames permanently dimmed.
-
-   The same idiom the work index already uses on its list, so the site has one
-   way of saying "this is the one you are looking at". */
-@media (hover: hover) and (pointer: fine) {
-  /* Keyed to a frame actually being under the cursor, not to the container.
-     The grid has gutters and the section has padding, so `.team:hover` is true
-     whenever the cursor is anywhere near the block — including the dead space
-     between frames, which dimmed all four at once and washed the whole section
-     out. `:has` asks the question that was meant. */
-  .team:has(.member:hover) .member { filter: opacity(0.46); }
-  .team .member:hover { filter: none; }
-}
-
-
-@media (prefers-reduced-motion: reduce) {
-  .portraitImg { transform: none; }
-}
-
-.portraitIndex {
-  position: absolute;
-  top: 0.6rem;
-  left: 0.7rem;
+.memberIndex {
   font-family: var(--font-mono);
   font-size: 0.5625rem;
   letter-spacing: 0.2em;
-  color: var(--ground);
-  mix-blend-mode: difference;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
 }
 
 .memberName { font-size: 1.15rem; }

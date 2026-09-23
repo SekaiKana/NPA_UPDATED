@@ -3,13 +3,20 @@
 import { useLang } from '@/components/LangContext';
 import Reveal from '@/components/motion/Reveal';
 import FloatingText from '@/components/motion/FloatingText';
+import FogReveal from '@/components/ui/FogReveal';
 import DisplayReveal from '@/components/motion/DisplayReveal';
 import IndexRow from '@/components/ui/IndexRow';
-import Caliper from '@/components/capabilities/Caliper';
+import Caliper from '@/components/ui/Caliper';
 import shell from '../page-shell.module.css';
 import styles from './capabilities.module.css';
 
-const CAPABILITIES = ['1', '2', '3', '4', '5', '6'] as const;
+/* Reading order, not key order. The numbers down the page are positional, so
+   these are stable identifiers into the copy rather than the figures shown.
+
+   `7` sits second because it is the answer to "can you build us a site like
+   this one", and burying that at the bottom of a list of seven is the one
+   place it does not do its job. Move it back to the end by putting it last. */
+const CAPABILITIES = ['1', '7', '2', '3', '4', '5', '6'] as const;
 
 export default function CapabilitiesPage() {
   const { t } = useLang();
@@ -27,7 +34,11 @@ export default function CapabilitiesPage() {
             </DisplayReveal>
           </div>
           <Reveal delay={0.12} className={shell.lead}>
-            <FloatingText className="body" text={t('cap.desc')} />
+            {/* The haze the cursor wipes clear. Inside the reveal, so the
+                paragraph is what it blurs. */}
+            <FogReveal>
+              <FloatingText className="body" text={t('cap.desc')} />
+            </FogReveal>
           </Reveal>
         </div>
       </header>
@@ -48,7 +59,7 @@ export default function CapabilitiesPage() {
             {CAPABILITIES.map((n, i) => (
               <IndexRow
                 key={n}
-                index={String(i + 1).padStart(3, '0')}
+                index={String(i + 1)}
                 title={t(`cap.${n}.title`)}
                 body={t(`cap.${n}.desc`)}
               />

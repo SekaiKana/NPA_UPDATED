@@ -16,10 +16,9 @@ const READING_LINE = 0.42;
 /**
  * A dimension annotation that measures whichever row you are looking at.
  *
- * The capabilities page is a numbered technical index, and this is the
- * instrument you would use on one: two jaws close onto the active row's top and
- * bottom edges, an extension line joins them in the gutter, and a readout gives
- * the row's number against the total.
+ * Used on the numbered indexes that carry the site's content: two jaws close
+ * onto the active row's top and bottom edges, an extension line joins them in
+ * the gutter, and a readout gives the row's number against the total.
  *
  * What makes it the page's own rather than a variation on the row hover it sits
  * over is continuity. The row hover is a state each row enters and leaves
@@ -60,40 +59,67 @@ export default function Caliper({
   const readoutRef = useRef<HTMLSpanElement>(null);
   const reduced = usePrefersReducedMotion();
 
-  /* Row geometry measured once per layout, in the container's own coordinates.
-     Offsets inside the container do not change when the page scrolls, so this
-     survives every scroll frame untouched and only the container's own position
-     has to be read per frame. */
-  const rows = useRef<{ top: number; height: number }[]>([]);
+  /* The row the instrument is currently on, so it is not re-tweened to where
+     it already is on every frame. */
   const active = useRef(-1);
-  /* The container's own height at the last measurement. A cheap tell that the
-     rows have reflowed under us for any reason the props do not describe. */
-  const measuredAt = useRef(-1);
+  /* Whether it has ever actually been placed. `active` alone is not enough:
+     the effect can run more than once before anything is painted, and a second
+     run that agrees with the first about which row is active would skip the
+     move and leave the instrument at its initial height of zero. Invisible on
+     these two pages only because both lists start below the fold. */
+  const placed = useRef(false);
 
-  const measure = useCallback(() => {
-    if (!wrapEl) return;
-    const box = wrapEl.getBoundingClientRect();
-    rows.current = Array.from(
+  /* Read on demand, never cached.
+     Three separate bugs here came from holding geometry and trying to work out
+     when it had gone stale: measured during the staggered entry, the rows were
+     26px high in the wrong place; measured before the web fonts arrived, they
+     were barely half their eventual height; measured before a language change,
+     they were sized to the wrong script. Every one of those was a missing
+     invalidation rather than a wrong calculation.
+
+     So there is nothing to invalidate. The rows are read at the moment the
+     instrument needs to know where they are, which is a handful of `offsetTop`
+     reads on elements the browser has just laid out anyway, at most once per
+     animation frame. `offsetTop` rather than `getBoundingClientRect` because it
+     reports the laid-out position and ignores the entry transform. */
+  const readRows = useCallback((): { top: number; height: number }[] => {
+    if (!wrapEl) return [];
+    return Array.from(
       wrapEl.querySelectorAll<HTMLElement>('[data-index-row]')
     ).map((el) => {
-      const r = el.getBoundingClientRect();
-      return { top: r.top - box.top, height: r.height };
+      /* Summed up the offset chain, so an element that happens to be
+         positioned between a row and the container cannot shift everything. */
+      let top = 0;
+      let node: HTMLElement | null = el;
+      while (node && node !== wrapEl) {
+        top += node.offsetTop;
+        node = node.offsetParent as HTMLElement | null;
+      }
+      return { top, height: el.offsetHeight };
     });
-    measuredAt.current = box.height;
-    // The geometry moved, so whatever row it was on has to be re-applied.
-    active.current = -1;
   }, [wrapEl]);
 
   /** Moves the instrument onto a row. Does nothing if it is already there. */
   const goTo = useCallback(
-    (index: number) => {
+    (index: number, row: { top: number; height: number } | undefined) => {
       const bar = barRef.current;
-      const row = rows.current[index];
-      if (!bar || !row || active.current === index) return;
+      if (!bar || !row) return;
+      if (active.current === index && placed.current) return;
       active.current = index;
 
       if (readoutRef.current) {
-        readoutRef.current.textContent = String(index + 1).padStart(3, '0');
+        readoutRef.current.textContent = String(index + 1);
+      }
+
+      /* The first placement is a set, not a tween.
+         An instrument that slides in from the top of the list on load is
+         announcing itself, which is not what it is for: it should simply
+         already be measuring the row you arrive at. Travel is what it does
+         between rows, once it is on one. */
+      if (!placed.current) {
+        placed.current = true;
+        gsap.set(bar, { y: row.top, height: row.height });
+        return;
       }
 
       gsap.to(bar, {
@@ -119,49 +145,51 @@ export default function Caliper({
     const bar = barRef.current;
     if (!bar) return;
 
-    measure();
-
     const fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
     /* Which row the reading line falls in. Used when there is no pointer over
        the list, which covers touch, keyboard and simply scrolling past. */
     const fromScroll = () => {
-      if (rows.current.length === 0) return;
-      const box = wrapEl.getBoundingClientRect();
-      /* Self-healing: the container changing height means the rows reflowed,
-         whatever caused it — a late image, a font, copy swapped underneath.
-         One number compared per frame, against six rects re-read only when it
-         actually differs. */
-      if (Math.abs(box.height - measuredAt.current) > 1) {
-        measure();
-        return fromScroll();
-      }
-      const line = window.innerHeight * READING_LINE - box.top;
+      const rows = readRows();
+      if (rows.length === 0) return;
+      const line =
+        window.innerHeight * READING_LINE - wrapEl.getBoundingClientRect().top;
 
       let best = 0;
-      for (let i = 0; i < rows.current.length; i += 1) {
-        const r = rows.current[i];
-        if (line >= r.top) best = i;
+      for (let i = 0; i < rows.length; i += 1) {
+        if (line >= rows[i].top) best = i;
       }
-      goTo(best);
+      goTo(best, rows[best]);
       bar.classList.add(styles.on);
+    };
+
+    /* The last place the pointer was, in viewport coordinates.
+       Kept because scrolling moves the rows under a stationary cursor without
+       firing a single pointer event: the row hover updates itself, being CSS,
+       and the instrument would sit on whichever row happened to be under the
+       cursor when it last moved. Two different answers to "which row am I on"
+       on the same screen is worse than either. */
+    let pointerY: number | null = null;
+
+    const fromPointer = (clientY: number) => {
+      const rows = readRows();
+      const y = clientY - wrapEl.getBoundingClientRect().top;
+      const i = rows.findIndex((r) => y >= r.top && y <= r.top + r.height);
+      if (i === -1) return false;
+      goTo(i, rows[i]);
+      bar.classList.add(styles.on);
+      return true;
     };
 
     const onPointerMove = (e: PointerEvent) => {
       if (!fine || e.pointerType !== 'mouse') return;
-      const box = wrapEl.getBoundingClientRect();
-      if (Math.abs(box.height - measuredAt.current) > 1) measure();
-      const y = e.clientY - box.top;
-      const i = rows.current.findIndex(
-        (r) => y >= r.top && y <= r.top + r.height
-      );
-      if (i === -1) return;
-      goTo(i);
-      bar.classList.add(styles.on);
+      pointerY = e.clientY;
+      fromPointer(e.clientY);
     };
 
     const onPointerLeave = () => {
       if (!fine) return;
+      pointerY = null;
       // Hand it back to the reading line rather than hiding it.
       fromScroll();
     };
@@ -172,17 +200,29 @@ export default function Caliper({
       queued = true;
       requestAnimationFrame(() => {
         queued = false;
-        /* Only while the pointer is elsewhere. Taking the row back off the
-           cursor mid-hover is the one thing that would make this feel broken. */
-        if (!wrapEl.matches(':hover')) fromScroll();
+        /* Still the cursor's answer while it is over the list, just recomputed
+           against where the rows have scrolled to. Only once it is elsewhere
+           does the reading line take over. */
+        if (pointerY !== null && wrapEl.matches(':hover')) {
+          if (fromPointer(pointerY)) return;
+        }
+        fromScroll();
       });
     };
 
     const onResize = () => {
-      measure();
+      // The rows moved, so whatever row it was on has to be re-applied.
       active.current = -1;
       fromScroll();
     };
+
+    /* One more pass after the first paint. The rows are laid out by then
+       whatever the entry animation is doing, so this is the placement that is
+       guaranteed to be against real geometry. */
+    const settle = requestAnimationFrame(() => {
+      active.current = -1;
+      fromScroll();
+    });
 
     fromScroll();
 
@@ -191,9 +231,8 @@ export default function Caliper({
     window.addEventListener('scroll', onScroll, { passive: true });
     window.addEventListener('resize', onResize, { passive: true });
 
-    /* The rows arrive with a staggered reveal, so their first measurement is
-       taken while they are still offset. One re-measure once the fonts have
-       landed catches both that and the metrics changing under a late face. */
+    /* The fonts change every row's height when they land. Nothing is cached,
+       so this only has to re-apply the position rather than re-derive it. */
     let live = true;
     document.fonts?.ready.then(() => {
       if (live) onResize();
@@ -201,6 +240,7 @@ export default function Caliper({
 
     return () => {
       live = false;
+      cancelAnimationFrame(settle);
       wrapEl.removeEventListener('pointermove', onPointerMove);
       wrapEl.removeEventListener('pointerleave', onPointerLeave);
       window.removeEventListener('scroll', onScroll);
@@ -208,7 +248,7 @@ export default function Caliper({
     };
     /* `revision` is not read in the body of this effect. Changing it is the
        point: it re-runs everything above, which re-measures. */
-  }, [wrapEl, measure, goTo, revision]);
+  }, [wrapEl, readRows, goTo, revision]);
 
   return (
     <div ref={setWrapEl} className={`${styles.wrap} ${className}`}>
@@ -222,7 +262,7 @@ export default function Caliper({
           <span ref={readoutRef}>001</span>
           <span className={styles.readoutTotal}>
             {' / '}
-            {String(total).padStart(3, '0')}
+            {String(total)}
           </span>
         </span>
       </div>

@@ -37,9 +37,16 @@
 }
 
 .text {
-  /* Wide enough to break into three or four balanced lines at desktop, which
-     is what makes a centred setting read as deliberate. */
-  max-width: 18ch;
+  /* 18ch broke this into six or seven lines and left roughly a third of the
+     band empty on each side, which reads as a narrow column stranded in the
+     middle rather than as a statement filling its band. Widened to roughly the
+     measure the other headline blocks on the page run to, so it sets in three
+     or four lines and the margins become framing instead of dead space.
+
+     Still capped in `ch` rather than let out to the full shell: at this size an
+     unconstrained line would run past 1400px, which is well beyond a readable
+     measure however much space there is to fill. */
+  max-width: 28ch;
   letter-spacing: -0.02em;
   text-wrap: balance;
 }
@@ -61,8 +68,12 @@
   transform-origin: center;
 }
 
+@media (max-width: 1100px) {
+  .text { max-width: 22ch; }
+}
+
 @media (max-width: 640px) {
-  .text { max-width: 14ch; }
+  .text { max-width: 16ch; }
   .label::before, .label::after { width: 1.25rem; }
 }
 

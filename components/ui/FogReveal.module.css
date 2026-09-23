@@ -1,0 +1,44 @@
+/* =============================================================
+   FOG
+   A haze over a paragraph that the cursor wipes clear, the way a
+   finger clears condensation off a window.
+
+   The haze is on the words, not over the block. A veil covering
+   the paragraph's box also covers the ragged space past the end
+   of every short line, which reads as a grey panel sitting on the
+   page rather than as text that has gone soft. Blurring each word
+   means the effect exists exactly where there is something to
+   obscure and nowhere else.
+   ============================================================= */
+
+.fog {
+  position: relative;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  /* 1 is fully fogged, 0 is clear. Written per word by the component; the
+     default here is what the words look like before it has run, and before
+     the cursor has ever been near them. */
+  .fog [data-token] {
+    --fog: 1;
+    filter: blur(calc(var(--fog) * 5.5px));
+    opacity: calc(1 - var(--fog) * 0.34);
+    /* No `will-change`. The blur only changes while a word is actually being
+       wiped, and once cleared it never changes again, so promoting every word
+       in the paragraph to its own layer for the life of the page buys nothing
+       and costs memory on a paragraph that can run to forty of them. */
+  }
+}
+
+/* =============================================================
+   NO CURSOR, NO FOG
+   A touch device has nothing to wipe with, so the haze would be
+   permanent. The media query above already excludes it; this is
+   the same statement for anyone who has asked for less motion.
+   ============================================================= */
+@media (prefers-reduced-motion: reduce) {
+  .fog [data-token] {
+    filter: none;
+    opacity: 1;
+  }
+}

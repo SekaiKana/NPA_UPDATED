@@ -55,6 +55,16 @@
    the pointer: the commitment accordion's current step. */
 .rowOn { --on: 1; }
 
+/* Every read of `--on` below carries its own `0` fallback, and that is not
+   belt and braces. A row that opts out of this interaction — a muted
+   placeholder, say — never receives the `.row` class that declares the
+   property, so an unqualified `var(--on)` is unresolvable, the whole
+   declaration becomes invalid at computed-value time, and the property falls
+   back to its *initial* value. For `opacity` that initial value is 1, so the
+   accent plate paints at full strength on exactly the rows that asked not to
+   have it: a lighter panel behind the row that reads as a rendering fault.
+   The transforms fail more quietly, to `none`, but fail all the same. */
+
 /* ---- The plate ----
    Behind the content, never in front of it, and never a pointer target: it
    must not be able to break the row's own hit area. It rises and fades in
@@ -66,11 +76,11 @@
   z-index: -1;
   border-radius: 3px;
   background: var(--accent-soft);
-  opacity: var(--on);
-  transform: translateY(calc((1 - var(--on)) * 5px));
+  opacity: var(--on, 0);
+  transform: translateY(calc((1 - var(--on, 0)) * 5px));
   box-shadow:
-    0 calc(var(--on) * 14px) calc(var(--on) * 30px) rgba(18, 18, 18, calc(var(--on) * 0.07)),
-    0 calc(var(--on) * 2px) calc(var(--on) * 5px) rgba(18, 18, 18, calc(var(--on) * 0.05));
+    0 calc(var(--on, 0) * 14px) calc(var(--on, 0) * 30px) rgba(18, 18, 18, calc(var(--on, 0) * 0.07)),
+    0 calc(var(--on, 0) * 2px) calc(var(--on, 0) * 5px) rgba(18, 18, 18, calc(var(--on, 0) * 0.05));
   pointer-events: none;
   transition:
     opacity var(--t-fast) var(--ease),
@@ -86,7 +96,7 @@
 .index {
   display: inline-block;
   transform-origin: left center;
-  transform: scale(calc(1 + var(--on) * 0.24)) translateY(calc(var(--on) * -1px));
+  transform: scale(calc(1 + var(--on, 0) * 0.24)) translateY(calc(var(--on, 0) * -1px));
   transition:
     transform var(--t-spring) var(--ease-spring-pop),
     color var(--t-fast) var(--ease);
@@ -97,7 +107,7 @@
    the furthest distance and the calmer spring. */
 .title {
   display: block;
-  transform: translateX(calc(var(--on) * 12px));
+  transform: translateX(calc(var(--on, 0) * 12px));
   transition: transform var(--t-spring) var(--ease-spring);
 }
 
@@ -106,7 +116,7 @@
    it less is what gives the row the sense of hinging from the left. */
 .trail {
   display: block;
-  transform: translateX(calc(var(--on) * 4px));
+  transform: translateX(calc(var(--on, 0) * 4px));
   transition: transform var(--t-spring) var(--ease-spring);
 }
 
@@ -116,7 +126,7 @@
    indent, the row appears to stretch under the cursor and settle back. */
 .arrow {
   display: inline-block;
-  transform: translateX(calc(var(--on) * 14px));
+  transform: translateX(calc(var(--on, 0) * 14px));
   transition:
     transform var(--t-spring) var(--ease-spring-pop),
     opacity var(--t-fast) var(--ease);
@@ -126,7 +136,7 @@
    sliding it sideways would fight the open/close it already animates. It gets
    the scale pop alone. */
 .mark {
-  transform: scale(calc(1 + var(--on) * 0.12));
+  transform: scale(calc(1 + var(--on, 0) * 0.12));
   transition: transform var(--t-spring) var(--ease-spring-pop);
 }
 

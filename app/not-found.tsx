@@ -54,7 +54,7 @@ export default function NotFound() {
         <div className={styles.index}>
           {INDEX.map((item, i) => (
             <TransitionLink key={item.href} href={item.href} className={styles.indexLink}>
-              <IndexRow index={String(i + 1).padStart(3, '0')} title={t(item.key)} />
+              <IndexRow index={String(i + 1)} title={t(item.key)} />
             </TransitionLink>
           ))}
         </div>

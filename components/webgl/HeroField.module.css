@@ -34,10 +34,3 @@
     width: 52%;
   }
 }
-
-.fallback {
-  width: min(78vmin, 640px);
-  height: auto;
-  color: var(--ink);
-  opacity: 0.8;
-}

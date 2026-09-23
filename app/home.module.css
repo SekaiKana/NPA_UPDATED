@@ -73,6 +73,33 @@
 
 .index { display: flex; flex-direction: column; }
 
+/* ---- The list running off the bottom ----
+   A fourth row, clipped short and faded out, so the section reads as the top
+   of a longer list rather than as a complete set of three. The link beside the
+   heading is still the way to the rest; this only says there is a rest.
+
+   Faded with a mask rather than an overlay. An overlay has to be painted some
+   colour, and the colour underneath here is a gradient with grain over it that
+   changes down the page, so any flat panel would show as a band. A mask takes
+   the row's own opacity to nothing and lets whatever is actually behind it
+   come through, which cannot mismatch because it is not a copy of the
+   background — it is the background. */
+.moreHint {
+  /* Enough for the number, the title and a first line of the description. */
+  max-height: 8.5rem;
+  overflow: hidden;
+  /* Nothing in here is reachable: it is a picture of a row, not a row. */
+  pointer-events: none;
+  user-select: none;
+  mask-image: linear-gradient(to bottom, #000 0%, #000 26%, transparent 94%);
+}
+
+@media (max-width: 880px) {
+  /* The title wraps to two lines in the narrow layout, so the cut has to fall
+     lower or it lands in the middle of the words it is meant to show. */
+  .moreHint { max-height: 10.5rem; }
+}
+
 /* ---- The edge ---- */
 
 .approach {
@@ -81,6 +108,12 @@
   gap: var(--s-6);
   align-items: start;
 }
+
+/* Grid items are `min-width: auto` by default, which means a track refuses to
+   shrink below its widest unbreakable child. On a narrow phone that pushed
+   this whole section wider than the viewport and gave the page a horizontal
+   scroll. Nothing in here needs to resist shrinking. */
+.approach > * { min-width: 0; }
 
 .approachLead {
   display: flex;
@@ -141,7 +174,52 @@
 
 /* ---- Responsive ---- */
 
+/* =============================================================
+   THE HERO ON NARROW SCREENS
+   On a wide screen the cluster sits in the right half and the
+   headline has the left to itself, so the two never meet. There
+   is no right half on a phone: the art takes the full width of
+   the upper band and the copy is centred through the middle of
+   it, which puts white spheres directly behind white type and
+   makes the headline genuinely hard to read.
+
+   Moving them apart is not available — a 780px viewport does not
+   have room for both a cluster and four lines of display type
+   with air between them. So the art stays where it is and a
+   scrim is laid over it, weighted to where the copy actually
+   falls. The top of the cluster stays fully visible; its lower
+   part sinks into the dark, which reads as depth rather than as
+   something being hidden.
+
+   Sits above the shared canvas and below `.heroInner`, which
+   already carries `z-index: 1`.
+   ============================================================= */
+@media (max-width: 1099px) {
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      rgba(18, 18, 18, 0.35) 24%,
+      rgba(18, 18, 18, 0.82) 38%,
+      rgba(18, 18, 18, 0.9) 100%
+    );
+  }
+}
+
 @media (max-width: 880px) {
   .hero { align-items: center; }
   .approach { grid-template-columns: 1fr; gap: var(--s-5); }
+}
+
+/* The narrowest phones still in use. A figure, its unit and its label do not
+   fit on one line at 320px however hard the tracks are squeezed, so the label
+   takes a line of its own rather than forcing the panel past the screen. */
+@media (max-width: 420px) {
+  .spec { grid-template-columns: auto 1fr; }
+  .specLabel { grid-column: 1 / -1; }
 }
