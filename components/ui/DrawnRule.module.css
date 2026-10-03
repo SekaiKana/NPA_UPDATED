@@ -1,0 +1,21 @@
+/* A ruled line, drawn from the left as it comes into view. Sits where a
+   `border-top` would, so the parent loses nothing in layout by using it. */
+.rule {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -1px;
+  height: 1px;
+  background: var(--rule);
+  transform-origin: left center;
+  pointer-events: none;
+  transition: transform 1.2s var(--ease) var(--draw-delay, 0s);
+}
+
+.strong { background: var(--rule-strong); }
+
+.rule[data-draw='pending'] { transform: scaleX(0); }
+
+@media (prefers-reduced-motion: reduce) {
+  .rule { transition: none; }
+}

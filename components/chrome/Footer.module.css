@@ -16,6 +16,10 @@
   max-width: 14ch;
 }
 
+/* `ch` is the width of a Latin zero, about half a kanji, so 14ch holds only
+   seven Japanese characters and broke the line inside its last phrase. */
+:global(html[lang='ja']) .ctaTitle { max-width: 10em; }
+
 .ctaLink {
   display: inline-flex;
   align-items: center;
@@ -24,9 +28,10 @@
   padding: 1.1rem 2.2rem;
   border: 1px solid var(--rule-strong);
   border-radius: 999px;
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.2em;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ink);
   transition: background var(--t-fast) var(--ease), color var(--t-fast) var(--ease),

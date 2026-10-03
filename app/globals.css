@@ -1,8 +1,8 @@
 /* =============================================================
    NPA — "BLUEPRINT"
    Bone ground, ink black, one walnut brown. Oldstyle serif
-   display against wide-tracked monospace, structured by hairline
-   rules. The page should read like a technical drawing that
+   display against small, bold, wide-tracked capitals in the sans,
+   structured by hairline rules. The page should read like a technical drawing that
    happens to be beautiful.
    ============================================================= */
 
@@ -43,7 +43,9 @@
     'Noto Serif JP', Garamond, Georgia, serif;
   --font-sans: var(--font-nunito), -apple-system, BlinkMacSystemFont,
     'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Noto Sans JP', sans-serif;
-  --font-mono: var(--font-plex-mono), 'SF Mono', ui-monospace, monospace;
+  /* Two faces, not three. The labels, navigation and readouts were set in
+     IBM Plex Mono until the client asked for it to go (Sept 2026); they are
+     the sans now, in bold capitals. Do not bring a monospace back. */
 
   /* ---- Space ---- */
   --s-1: 0.5rem;
@@ -137,7 +139,7 @@ body {
   font-size: 1rem;
   line-height: 1.6;
   /* Nunito sets loose by default. A hair negative stops body copy drifting
-     wide next to the tightly tracked display and mono. */
+     wide next to the tightly tracked display. */
   letter-spacing: -0.006em;
   overflow-x: hidden;
   min-height: 100vh;
@@ -221,9 +223,8 @@ html.lenis, html.lenis body { height: auto; }
    Display is an oldstyle serif: it wants size, leading a shade
    looser than a Didone, and a whisper of negative tracking. It has
    no optical-size axis, so weight does that job. Labels are the
-   opposite — tiny,
-   monospace, and tracked wide enough to read as an instrument
-   panel rather than as text.
+   opposite: tiny bold capitals in the sans, tracked wide enough to
+   read as an instrument panel rather than as text.
    ============================================================= */
 
 .display {
@@ -262,10 +263,10 @@ html.lenis, html.lenis body { height: auto; }
 }
 
 .label {
-  font-family: var(--font-mono);
-  font-size: 0.625rem;
-  font-weight: 400;
-  letter-spacing: 0.42em;
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--ink-3);
   line-height: 1.4;
@@ -273,10 +274,34 @@ html.lenis, html.lenis body { height: auto; }
 
 .label-accent { color: var(--accent); }
 
+/* Japanese line breaking. `strict` keeps small kana and closing punctuation
+   off the start of a line; `auto-phrase` breaks between phrases rather than
+   between any two characters, so a word like 打破する is not split across two
+   lines. Engines without `auto-phrase` fall back to ordinary breaking, which
+   is what every Japanese line on the site used before. */
+html[lang='ja'] body {
+  line-break: strict;
+  word-break: auto-phrase;
+}
+
+/* Present for assistive technology, absent from the picture. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
 .meta {
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  letter-spacing: 0.06em;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
   color: var(--ink-3);
   font-variant-numeric: tabular-nums;
 }
@@ -419,6 +444,22 @@ html.lenis, html.lenis body { height: auto; }
 .split-line { display: block; overflow: hidden; }
 .split-inner { display: block; will-change: transform; }
 
+/* SplitText wraps each display line in a mask that clips its rise, and the
+   mask is exactly one line box tall. Display leading is tighter than the
+   face's own ascent plus descent, so a bare mask shaves every descender (the
+   p of "process", the tail of a comma) and the right-hand overhang of an
+   italic, and it stays that way after the rise has finished. The clip is bled
+   past the line box and pulled back with a matching negative margin, so the
+   glyphs clear it and the layout does not move.
+
+   Bottom and sides only. The masks are stacked blocks, and a negative top
+   margin would collapse with the negative bottom margin of the line above
+   (only the larger of the two applies), spreading every heading apart. */
+.split-inner-mask {
+  padding: 0 0.14em 0.24em 0.06em;
+  margin: 0 -0.14em -0.24em -0.06em;
+}
+
 /* =============================================================
    REDUCED MOTION
    The WebGL stage never mounts under this query (handled in JS).
@@ -447,6 +488,6 @@ html.lenis, html.lenis body { height: auto; }
 
 @media (max-width: 640px) {
   :root { --gutter: 1.15rem; --s-8: 6rem; --s-7: 4.5rem; --s-6: 3.5rem; --nav-h: 60px; }
-  .label { letter-spacing: 0.3em; }
+  .label { letter-spacing: 0.16em; }
   .body { max-width: none; }
 }

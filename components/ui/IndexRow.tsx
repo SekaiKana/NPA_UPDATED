@@ -1,6 +1,7 @@
 'use client';
 
-import type { ReactNode } from 'react';
+import type { CSSProperties, ReactNode } from 'react';
+import { useDrawn } from '@/hooks/useDrawn';
 import styles from './IndexRow.module.css';
 import fx from './rowFx.module.css';
 
@@ -39,6 +40,10 @@ export default function IndexRow({
   mutedNote,
 }: IndexRowProps) {
   const interactive = Boolean(onActivate) && !muted;
+  /* The row's rules are ruled in as it arrives; see IndexRow.module.css.
+     Rows that arrive together draw a beat apart, in reading order. */
+  const rowRef = useDrawn<HTMLDivElement>();
+  const drawDelay = `${Math.min(Math.max(Number(index) - 1, 0), 5) * 0.07}s`;
 
   const content = (
     <>
@@ -61,6 +66,8 @@ export default function IndexRow({
 
   return (
     <div
+      ref={rowRef}
+      style={{ '--draw-delay': drawDelay } as CSSProperties}
       /* A hook for anything that needs to find the rows of a list without
          reaching into this module's hashed class names. The capabilities
          caliper measures against it. */

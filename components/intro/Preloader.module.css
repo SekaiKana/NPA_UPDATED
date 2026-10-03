@@ -60,19 +60,24 @@
   border-top: 1px solid var(--rule);
 }
 
+/* In the display face, like every other large figure on the site (the
+   datasheet, the reel's counter). Lining and tabular, so the count holds
+   still on its baseline instead of the oldstyle figures bobbing. */
 .counter {
-  font-family: var(--font-mono);
+  font-family: var(--font-display);
+  font-weight: 500;
   font-size: clamp(2.5rem, 6vw, 5rem);
   line-height: 1;
-  font-variant-numeric: tabular-nums;
+  font-variant-numeric: lining-nums tabular-nums;
   color: var(--accent);
   letter-spacing: -0.02em;
 }
 
 .skip {
-  font-family: var(--font-mono);
-  font-size: 0.625rem;
-  letter-spacing: 0.3em;
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
   color: var(--ink-3);
 }

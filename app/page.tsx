@@ -9,8 +9,11 @@ import HeroField from '@/components/webgl/HeroField';
 import SectionHead from '@/components/ui/SectionHead';
 import IndexRow from '@/components/ui/IndexRow';
 import ScrollStatement from '@/components/home/ScrollStatement';
-import CountUp from '@/components/motion/CountUp';
+import Odometer from '@/components/motion/Odometer';
+import Decode from '@/components/motion/Decode';
+import Drift from '@/components/motion/Drift';
 import GlassSurface from '@/components/glass/GlassSurface';
+import Reel from '@/components/reel/Reel';
 import styles from './home.module.css';
 
 /** The three the homepage leads with; /capabilities carries the rest. */
@@ -27,7 +30,9 @@ const LEAD_CAPABILITIES = ['1', '2', '3'] as const;
  */
 const TEASED_CAPABILITY = '7';
 
-const SPECS = ['1', '2', '3'] as const;
+/* Flexibility first, then ownership, and the sprint length last: it is a
+   supporting fact, not the pitch. */
+const SPECS = ['3', '2', '1'] as const;
 
 export default function Home() {
   const { t } = useLang();
@@ -40,23 +45,28 @@ export default function Home() {
         <HeroField />
 
         <div className={`shell ${styles.heroInner}`}>
-          <h1 className={`display d-xl ${styles.heroTitle}`}>
-            <DisplayReveal immediate delay={0.15}>
-              {t('home.hero.l1')}
-            </DisplayReveal>
-            <DisplayReveal immediate delay={0.24}>
-              {t('home.hero.l2')}
-            </DisplayReveal>
-            <DisplayReveal immediate delay={0.33} className={styles.heroAccent}>
-              {t('home.hero.l3')}
-            </DisplayReveal>
-          </h1>
+          {/* The headline hangs back as the hero scrolls away, and the
+              standfirst fades sooner, so the page reads as layered rather
+              than as one sheet sliding off. */}
+          <Drift depth={0.16} fade={0.55}>
+            <h1 className={`display d-xl ${styles.heroTitle}`}>
+              <DisplayReveal immediate delay={0.15}>
+                {t('home.hero.l1')}
+              </DisplayReveal>
+              <DisplayReveal immediate delay={0.24}>
+                {t('home.hero.l2')}
+              </DisplayReveal>
+              <DisplayReveal immediate delay={0.33} className={styles.heroAccent}>
+                {t('home.hero.l3')}
+              </DisplayReveal>
+            </h1>
+          </Drift>
 
-          <div className={styles.heroFoot}>
+          <Drift className={styles.heroFoot} depth={0.06} fade={1}>
             <Reveal delay={0.5}>
               <p className="body-lg">{t('home.hero.sub')}</p>
             </Reveal>
-          </div>
+          </Drift>
         </div>
       </section>
 
@@ -112,12 +122,19 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ---------- THE REEL ----------
+          After the list of what we build, the how, shown rather than told.
+          Its last two shots land on the same fourteen days and full ownership
+          the datasheet below then states, so the figures arrive as a summary
+          of something already seen. */}
+      <Reel />
+
       {/* ---------- THE EDGE ---------- */}
       <section className={`shell ${styles.section}`} id="approach">
         <div className={styles.approach}>
           <div className={styles.approachLead}>
             <Reveal>
-              <span className="label">{t('home.approach.label')}</span>
+              <Decode className="label" text={t('home.approach.label')} />
             </Reveal>
             <DisplayReveal as="h2" className={`display d-md ${styles.approachTitle}`}>
               {t('home.approach.title')}
@@ -137,7 +154,7 @@ export default function Home() {
             <Reveal className={styles.specs} stagger={0.09}>
               {SPECS.map((n) => (
                 <div key={n} className={styles.spec}>
-                  <CountUp
+                  <Odometer
                     value={t(`home.spec${n}.value`)}
                     className={styles.specValue}
                   />

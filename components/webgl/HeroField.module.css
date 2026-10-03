@@ -13,13 +13,32 @@
 /* The WebGL scene takes both its position and its size from this element's
    rect, so these rules are the only place the hero art is composed.
 
-   Narrow screens: keep it in the upper band, above the body copy, at a size
-   that reads as a mark rather than as a background the text is trapped in. */
-@media (max-width: 1099px) {
+   Tablets held upright: the art takes the band between the navigation and
+   the headline, in normal flow above it, so its slot is exactly the room the
+   type leaves and the two cannot meet. It used to be a fixed 46% of the hero
+   with the headline placed independently below; on a 768 by 1024 screen the
+   spheres sat on "Whatever" and rode up into the navigation. The floor keeps
+   the cluster a presence on screens where the headline leaves little room;
+   the hero grows to make it rather than overlapping. The lower bound tracks
+   `NO_HERO` in HeroField.tsx: below it there is no cluster. */
+@media (min-width: 721px) and (max-width: 1099px) and (orientation: portrait) {
   .field {
-    bottom: auto;
-    height: 46%;
-    align-items: flex-start;
+    position: relative;
+    inset: auto;
+    flex: 1 1 auto;
+    width: 100%;
+    min-height: 30svh;
+  }
+}
+
+/* Tablets on their side get the wide arrangement: the art in the right half,
+   the headline on the left. Stacked, a 1024 by 768 screen had no room for
+   both and the spheres sat on the headline. */
+@media (min-width: 721px) and (max-width: 1099px) and (orientation: landscape) {
+  .field {
+    left: auto;
+    right: 0;
+    width: 46%;
   }
 }
 

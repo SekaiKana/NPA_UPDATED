@@ -1,6 +1,7 @@
 'use client';
 
 import { gsap } from 'gsap';
+import { ScrambleTextPlugin } from 'gsap/ScrambleTextPlugin';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { SplitText } from 'gsap/SplitText';
 
@@ -20,7 +21,10 @@ if (typeof window !== 'undefined') {
   /* SplitText used to be a paid Club plugin; since 3.13 every plugin ships
      free in the main package, which is why the display headlines can use real
      line-splitting instead of a hand-rolled approximation. */
-  gsap.registerPlugin(ScrollTrigger, SplitText);
+  /* ScrambleText is the instrument-panel readout: the reel's shot names and
+     the transition's route labels resolve out of noise the way a display
+     settles, rather than fading. */
+  gsap.registerPlugin(ScrollTrigger, SplitText, ScrambleTextPlugin);
 
   // The site's two curves, registered as named eases so timelines read the
   // same way the stylesheet does.

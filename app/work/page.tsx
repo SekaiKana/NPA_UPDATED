@@ -4,6 +4,8 @@ import { useLang } from '@/components/LangContext';
 import { TransitionLink } from '@/components/motion/PageTransition';
 import Reveal from '@/components/motion/Reveal';
 import DisplayReveal from '@/components/motion/DisplayReveal';
+import Decode from '@/components/motion/Decode';
+import Drift from '@/components/motion/Drift';
 import Magnetic from '@/components/motion/Magnetic';
 import shell from '../page-shell.module.css';
 import styles from './work.module.css';
@@ -23,14 +25,14 @@ export default function WorkPage() {
   return (
     <header className={`shell ${shell.masthead}`}>
       <div className={shell.mastheadInner}>
-        <div className={shell.mastLead}>
+        <Drift className={shell.mastLead} depth={0.12} fade={0.4}>
           <Reveal>
-            <span className="label label-accent">{t('work.soon.label')}</span>
+            <Decode className="label label-accent" text={t('work.soon.label')} />
           </Reveal>
           <DisplayReveal as="h1" className={`display d-lg ${shell.title}`}>
             {t('work.soon.title')}
           </DisplayReveal>
-        </div>
+        </Drift>
         <Reveal delay={0.12} className={shell.lead}>
           <p className="body">{t('work.soon.desc')}</p>
           <Magnetic>

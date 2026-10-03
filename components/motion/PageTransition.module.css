@@ -1,28 +1,76 @@
+/* =============================================================
+   THE CUT
+   Five ink shutters and a title card. The container only holds
+   them; it has no ground of its own, so what covers the page is
+   exactly the shutters and nothing shows before they arrive.
+   ============================================================= */
+
 .curtain {
   position: fixed;
   inset: 0;
   z-index: 8000;
-  background: var(--ground-ink);
-  /* Parked position is set by GSAP (yPercent), never here. A base
-     `transform: translateY(100%)` would be read back as a pixel offset and
-     ADDED to yPercent, so the curtain parked at 200% and its covered state
-     (yPercent 0) landed a full viewport below the fold — it never covered
-     anything. `visibility: hidden` alone keeps it out of sight until the
-     first transition sets it. */
+  /* Positions are set by GSAP (yPercent on the shutters), never here. A base
+     `transform` on anything GSAP drives with yPercent is read back as a pixel
+     offset and ADDED to it, which once parked the whole curtain a viewport
+     below the fold where it covered nothing. `visibility: hidden` alone keeps
+     it out of sight until the first cut sets it. */
   visibility: hidden;
   pointer-events: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  overflow: hidden;
 }
 
-.curtainMark {
+/* A shutter. A pixel wider than its share of the screen, so neighbours
+   overlap and no hairline of page shows between them mid-travel. */
+.panel {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: calc(20% + 1px);
+  background: var(--ground-ink);
+  /* The walnut leading edge, top as it rises in and bottom as it carries on
+     up and out: the reel's scanline, in the page's own material. */
+  box-shadow:
+    inset 0 1px 0 var(--accent-tint),
+    inset 0 -1px 0 var(--accent-tint);
+}
+
+/* ---- The card: the wordmark, on every route ---- */
+.card {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.1rem;
+  padding: var(--gutter);
+  text-align: center;
+}
+
+.titleMask {
+  display: block;
+  overflow: hidden;
+  /* Room for descenders and the italic overhang inside the clip. */
+  padding: 0 0.12em 0.14em;
+}
+
+.title {
+  display: block;
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: clamp(3rem, 12vw, 10rem);
-  letter-spacing: -0.03em;
+  font-size: clamp(3rem, 10vw, 9rem);
+  letter-spacing: -0.025em;
   line-height: 1;
   color: #f0efec;
+}
+
+/* Drawn across under the name while the new page loads behind. */
+.rule {
+  display: block;
+  width: min(420px, 60vw);
+  height: 1px;
+  background: var(--accent-tint);
+  transform-origin: left center;
 }
 
 @media (prefers-reduced-motion: reduce) {

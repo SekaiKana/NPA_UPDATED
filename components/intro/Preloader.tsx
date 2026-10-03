@@ -8,6 +8,7 @@ import {
   useSyncExternalStore,
 } from 'react';
 import { gsap, EASE, EASE_IO } from '@/lib/motion/gsap';
+import { setCovered } from '@/lib/motion/curtain';
 import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
 import { useLenis } from '@/components/motion/SmoothScroll';
 import styles from './Preloader.module.css';
@@ -77,6 +78,7 @@ export default function Preloader() {
 
     const root = rootRef.current;
     if (!root) {
+      setCovered(false);
       setDismissed(true);
       return;
     }
@@ -97,9 +99,13 @@ export default function Preloader() {
         stagger: 0.04,
       })
       .to(`.${styles.meta}`, { opacity: 0, duration: 0.3 }, '<')
+      /* The page's own entrance starts with the lift, not before it: the hero
+         headline rises as the intro goes up, instead of having finished
+         rising underneath it. */
+      .call(() => setCovered(false), [], '-=0.15')
       // The curtain lifts rather than fading: a fade reads as a loading state
       // ending, a lift reads as a reveal beginning.
-      .to(root, { yPercent: -100, duration: 0.9, ease: EASE_IO }, '-=0.15');
+      .to(root, { yPercent: -100, duration: 0.9, ease: EASE_IO }, '<');
   }, [lenis]);
 
   useEffect(() => {

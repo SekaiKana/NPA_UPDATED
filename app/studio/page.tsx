@@ -6,8 +6,11 @@ import FloatingText from '@/components/motion/FloatingText';
 import FogReveal from '@/components/ui/FogReveal';
 import LinkedInMark from '@/components/ui/LinkedInMark';
 import DisplayReveal from '@/components/motion/DisplayReveal';
+import Decode from '@/components/motion/Decode';
+import Drift from '@/components/motion/Drift';
 import SectionHead from '@/components/ui/SectionHead';
 import IndexRow from '@/components/ui/IndexRow';
+import DrawnRule from '@/components/ui/DrawnRule';
 import Caliper from '@/components/ui/Caliper';
 import Commitment from '@/components/studio/Commitment';
 import shell from '../page-shell.module.css';
@@ -40,14 +43,14 @@ export default function StudioPage() {
     <>
       <header className={`shell ${shell.masthead}`}>
         <div className={shell.mastheadInner}>
-          <div className={shell.mastLead}>
+          <Drift className={shell.mastLead} depth={0.12} fade={0.4}>
             <Reveal>
-              <span className="label">{t('studio.label')}</span>
+              <Decode className="label" text={t('studio.label')} />
             </Reveal>
             <DisplayReveal as="h1" className={`display d-lg ${shell.title}`}>
               {t('studio.title')}
             </DisplayReveal>
-          </div>
+          </Drift>
           <Reveal delay={0.12} className={shell.lead}>
             {/* The haze the cursor wipes clear. Inside the reveal, so the
                 paragraph is what it blurs. */}
@@ -61,7 +64,7 @@ export default function StudioPage() {
       {/* ---------- PRINCIPLES ---------- */}
       <section className={`shell ${shell.sectionTight}`}>
         <Reveal>
-          <span className="label">{t('studio.principles.label')}</span>
+          <Decode className="label" text={t('studio.principles.label')} />
         </Reveal>
         {/* The same instrument the capabilities index carries, so a numbered
             list behaves the same way wherever it appears on the site. */}
@@ -93,6 +96,8 @@ export default function StudioPage() {
         <div className={styles.team}>
           {TEAM.map((member, i) => (
             <Reveal key={member.name} delay={i * 0.06} className={styles.member}>
+              {/* The entry's rule, ruled in across the row one entry after another. */}
+              <DrawnRule delay={i * 0.09} />
               {/* The index used to sit on the portrait. With the photographs
                   gone it heads the entry, which is where the rest of the site
                   puts a number anyway. */}

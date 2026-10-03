@@ -2,6 +2,7 @@
 
 import { useRef, type ReactNode } from 'react';
 import { gsap, SplitText, EASE } from '@/lib/motion/gsap';
+import { whenUncovered } from '@/lib/motion/curtain';
 import { useIsomorphicLayoutEffect } from '@/hooks/useIsomorphicLayoutEffect';
 import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
 
@@ -45,33 +46,43 @@ export default function DisplayReveal({
       return;
     }
 
-    const ctx = gsap.context(() => {
-      const split = new SplitText(node, {
-        type: 'lines',
-        linesClass: 'split-inner',
-        // Each line gets a masking parent, which is what clips the rise.
-        mask: 'lines',
-      });
+    /* Built once nothing is covering the page (see lib/motion/curtain), so a
+       headline in view on arrival rises as the intro or the shutters lift
+       instead of having already risen underneath them. Until then it stays
+       hidden by the `[data-reveal]` rule, which is where it would be anyway. */
+    const held: { ctx?: gsap.Context } = {};
+    const cancel = whenUncovered(() => {
+      held.ctx = gsap.context(() => {
+        const split = new SplitText(node, {
+          type: 'lines',
+          linesClass: 'split-inner',
+          // Each line gets a masking parent, which is what clips the rise.
+          mask: 'lines',
+        });
 
-      node.dataset.reveal = 'shown';
-      gsap.set(node, { opacity: 1 });
+        node.dataset.reveal = 'shown';
+        gsap.set(node, { opacity: 1 });
 
-      gsap.from(split.lines, {
-        yPercent: 118,
-        duration: 1.15,
-        ease: EASE,
-        stagger: 0.085,
-        delay,
-        ...(immediate
-          ? {}
-          : { scrollTrigger: { trigger: node, start: 'top 86%', once: true } }),
-      });
-    }, node);
+        gsap.from(split.lines, {
+          yPercent: 118,
+          duration: 1.15,
+          ease: EASE,
+          stagger: 0.085,
+          delay,
+          ...(immediate
+            ? {}
+            : { scrollTrigger: { trigger: node, start: 'top 86%', once: true } }),
+        });
+      }, node);
+    });
 
     /* `ctx.revert()` already reverts any SplitText created inside the context.
        Calling `split.revert()` again afterwards operates on DOM that has
        already been restored, which throws. One revert, not two. */
-    return () => ctx.revert();
+    return () => {
+      cancel();
+      held.ctx?.revert();
+    };
   }, [reduced, delay, immediate]);
 
   return (

@@ -7,14 +7,14 @@ import type { Metadata } from 'next';
  * inheriting the homepage's from the root layout.
  */
 export const metadata: Metadata = {
-  title: 'Capabilities | Neural Point Analytica',
+  title: 'What we do | Neural Point Analytica',
   description:
-    'What we build: custom B2B platforms, AI and RAG integrations, internal tooling, data infrastructure and production-ready MVPs.',
+    'The kinds of software we build: web platforms, AI and RAG systems, internal tools, data pipelines, analytics, prototypes and interactive 3D sites.',
   alternates: { canonical: '/capabilities' },
   openGraph: {
-    title: 'Capabilities | Neural Point Analytica',
+    title: 'What we do | Neural Point Analytica',
     description:
-      'What we build: custom B2B platforms, AI and RAG integrations, internal tooling, data infrastructure and production-ready MVPs.',
+      'The kinds of software we build: web platforms, AI and RAG systems, internal tools, data pipelines, analytics, prototypes and interactive 3D sites.',
     url: '/capabilities',
     siteName: 'Neural Point Analytica',
     locale: 'en_US',

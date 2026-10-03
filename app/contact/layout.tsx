@@ -9,12 +9,12 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Contact | Neural Point Analytica',
   description:
-    'Tell us about your project. We reply within one business day with scope, timeline and where we would start.',
+    'Tell us what you are working on. We reply within one business day.',
   alternates: { canonical: '/contact' },
   openGraph: {
     title: 'Contact | Neural Point Analytica',
     description:
-      'Tell us about your project. We reply within one business day with scope, timeline and where we would start.',
+      'Tell us what you are working on. We reply within one business day.',
     url: '/contact',
     siteName: 'Neural Point Analytica',
     locale: 'en_US',

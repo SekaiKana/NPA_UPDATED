@@ -7,11 +7,14 @@
 
 /* ---- Form ---- */
 
+/* The column's top rule is a DrawnRule, ruled in on arrival; the border stays,
+   transparent, so the layout is unchanged. */
 .form {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: var(--s-4);
-  border-top: 1px solid var(--rule);
+  border-top: 1px solid transparent;
   padding-top: var(--s-4);
 }
 
@@ -25,10 +28,30 @@
 }
 
 .field {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 0.7rem;
 }
+
+/* The field in use gets a walnut line ruled in along its underline, from the
+   left, over the hairline already there. The input is the field's last child,
+   so the field's bottom edge is exactly the input's underline. */
+.field::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--t-mid) var(--ease);
+  pointer-events: none;
+}
+
+.field:focus-within::after { transform: scaleX(1); }
 
 .labelRow {
   display: flex;
@@ -39,9 +62,10 @@
 }
 
 .req {
-  font-family: var(--font-mono);
-  font-size: 0.5625rem;
-  letter-spacing: 0.2em;
+  font-family: var(--font-sans);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--accent);
 }
@@ -64,10 +88,12 @@
 .input:hover,
 .textarea:hover { border-bottom-color: var(--ink-2); }
 
+/* The underline itself stays put on focus: the walnut line ruled in by
+   `.field::after` is the focus state, and colouring the border underneath it
+   at the same moment would hide the drawing. */
 .input:focus,
 .textarea:focus {
   outline: none;
-  border-bottom-color: var(--accent);
 }
 
 .input:focus-visible,
@@ -94,9 +120,10 @@
   padding: 1.05rem 2.2rem;
   border: 1px solid var(--ink);
   border-radius: 999px;
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  letter-spacing: 0.2em;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   transition: background var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
 }
@@ -122,10 +149,11 @@
 /* ---- Aside ---- */
 
 .aside {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: var(--s-4);
-  border-top: 1px solid var(--rule);
+  border-top: 1px solid transparent;
   padding-top: var(--s-4);
 }
 

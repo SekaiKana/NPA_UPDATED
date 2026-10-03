@@ -24,9 +24,9 @@ import styles from './FloatingText.module.css';
  * interactions feel like one idea rather than several.
  *
  * Splitting is script-aware: Japanese is not space-delimited, so splitting it
- * on whitespace would yield one enormous token and no effect at all. Text
- * with no meaningful spaces is split per character instead, which is also
- * where CJK line breaking happens anyway.
+ * on whitespace would yield one enormous token and no effect at all. Text with
+ * no meaningful spaces is split into phrases instead (see `phrases`), which is
+ * also where a Japanese line should break.
  */
 
 interface FloatingTextProps {
@@ -47,19 +47,65 @@ interface Token {
   space: boolean;
 }
 
-/** Splits into words, or into characters when the script has no spaces. */
+/* Characters that may not start a line in Japanese: closing brackets and
+   punctuation, small kana, the long-vowel mark and the iteration mark. */
+const NO_LINE_START = /^[、。，．・：；！？）」』】〕〉》”’ー々ぁぃぅぇぉっゃゅょゎァィゥェォッャュョヮヵヶ）％]+$/;
+/* And the ones that may not end one: opening brackets. */
+const NO_LINE_END = /^[（「『【〔〈《“‘]+$/;
+/* Hiragana on its own: particles and endings, which belong with the word
+   before them (特定 + の, 私たち + は). */
+const TRAILING_KANA = /^[ぁ-ゟ]{1,3}$/;
+
+/**
+ * Japanese, as phrases.
+ *
+ * Every token is an inline-block, and every boundary between inline-blocks is
+ * somewhere the browser may wrap, so the tokens decide where lines can break.
+ * One token per character let a line open on 、 and split words down the
+ * middle. Segmenting into words and then gluing particles and punctuation to
+ * the word they belong to gives roughly the phrase (bunsetsu) a Japanese
+ * reader expects a line to break between, which is also a more natural unit
+ * to drift.
+ */
+function phrases(text: string): Token[] {
+  const Segmenter = (Intl as typeof Intl & { Segmenter?: typeof Intl.Segmenter }).Segmenter;
+  if (!Segmenter) return Array.from(text).map((c) => ({ text: c, space: false }));
+
+  const out: Token[] = [];
+  let carry = '';
+  for (const { segment } of new Segmenter('ja', { granularity: 'word' }).segment(text)) {
+    if (!segment.trim()) continue;
+    if (NO_LINE_END.test(segment)) {
+      carry += segment;
+      continue;
+    }
+    const last = out[out.length - 1];
+    if (last && !carry && (NO_LINE_START.test(segment) || TRAILING_KANA.test(segment))) {
+      last.text += segment;
+    } else {
+      out.push({ text: carry + segment, space: false });
+    }
+    carry = '';
+  }
+  if (carry) out.push({ text: carry, space: false });
+  return out;
+}
+
+/** Splits into words, or into phrases when the script has no spaces. */
 function tokenise(text: string): Token[] {
   const trimmed = text.trim();
   const words = trimmed.split(/\s+/);
 
   /* A space-delimited language gives roughly one token per five or six
-     characters. Far fewer than that means the spaces are not word breaks. */
+     characters. Far fewer than that means the spaces are not word breaks.
+     Japanese only ever reaches this on the client: the server renders
+     English, so segmenting cannot disagree with anything it sent. */
   const spaceDelimited = words.length > trimmed.length / 12;
 
   if (spaceDelimited) {
     return words.map((w, i) => ({ text: w, space: i < words.length - 1 }));
   }
-  return Array.from(trimmed).map((c) => ({ text: c, space: false }));
+  return phrases(trimmed);
 }
 
 interface TokenState {

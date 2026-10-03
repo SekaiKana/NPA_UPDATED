@@ -1,0 +1,24 @@
+/* Holds the walnut leading edges along the band's top. It takes no space:
+   everything in it is positioned against the band. */
+.edge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* The leading edge of one column: the same walnut hairline the page cut's
+   shutters carry. Moved by the component, never positioned by transform here. */
+.lip {
+  position: absolute;
+  top: 0;
+  height: 1px;
+  background: var(--accent-tint);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .edge { display: none; }
+}

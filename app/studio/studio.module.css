@@ -20,20 +20,23 @@
 }
 
 .member {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   /* A ruled entry rather than a framed one: without an image the column needs
      something to sit against, and a hairline is what the rest of the site
-     divides things with. */
+     divides things with. The rule is a DrawnRule, ruled in as the row
+     arrives; this border stays, transparent, to keep the entry's box. */
   padding-top: var(--s-2);
-  border-top: 1px solid var(--rule);
+  border-top: 1px solid transparent;
 }
 
 .memberIndex {
-  font-family: var(--font-mono);
-  font-size: 0.5625rem;
-  letter-spacing: 0.2em;
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
   color: var(--ink-3);
   font-variant-numeric: tabular-nums;
 }
@@ -41,9 +44,10 @@
 .memberName { font-size: 1.15rem; }
 
 .memberRole {
-  font-family: var(--font-mono);
-  font-size: 0.5625rem;
-  letter-spacing: 0.18em;
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--accent);
 }
@@ -68,9 +72,10 @@
      x-height of a line set in small caps and makes it read as a superscript. */
   align-items: center;
   gap: 0.4rem;
-  font-family: var(--font-mono);
-  font-size: 0.5625rem;
-  letter-spacing: 0.18em;
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ink-3);
   transition: color var(--t-fast) var(--ease);

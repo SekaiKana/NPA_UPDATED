@@ -1,0 +1,53 @@
+/* =============================================================
+   ODOMETER
+   One wheel per digit. The digit in flow is the figure as text,
+   width and baseline included; the strip is the wheel, shown in
+   its place only while it turns.
+   ============================================================= */
+
+.odometer {
+  display: inline-flex;
+  align-items: baseline;
+  /* Each wheel's window is exactly one line tall. */
+  line-height: 1;
+}
+
+.column {
+  position: relative;
+  display: inline-block;
+  /* Clip top and bottom to the window, but leave the sides open so the
+     serif's overhang is not shaved off.
+
+     `overflow-y: clip`, not `clip-path`. A clip-path only hides what it cuts:
+     the strip under it is forty-one figures tall and still counted as page,
+     so the homepage ran on for more than a screen of empty ground past the
+     footer. `clip` cuts it from the page's scrollable area as well, and
+     unlike `hidden` it does not make the column a scroll container, so the
+     column keeps its text baseline and the figure stays in line with the
+     unit beside it. */
+  overflow-x: visible;
+  overflow-y: clip;
+}
+
+.digit { display: inline-block; }
+
+.strip {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  visibility: hidden;
+}
+
+.cell {
+  display: block;
+  height: 1em;
+  line-height: 1;
+}
+
+/* While turning, the wheel shows and the figure behind it steps aside. */
+.odometer[data-rolling] .strip { visibility: visible; }
+.odometer[data-rolling] .digit { visibility: hidden; }

@@ -4,6 +4,8 @@ import { useEffect } from 'react';
 import { useLang } from '@/components/LangContext';
 import Reveal from '@/components/motion/Reveal';
 import DisplayReveal from '@/components/motion/DisplayReveal';
+import Decode from '@/components/motion/Decode';
+import Drift from '@/components/motion/Drift';
 import Magnetic from '@/components/motion/Magnetic';
 import shell from './page-shell.module.css';
 import styles from './status.module.css';
@@ -36,14 +38,14 @@ export default function Error({
   return (
     <header className={`shell ${shell.masthead}`}>
       <div className={shell.mastheadInner}>
-        <div className={shell.mastLead}>
+        <Drift className={shell.mastLead} depth={0.12} fade={0.4}>
           <Reveal>
-            <span className="label label-accent">{t('err.label')}</span>
+            <Decode className="label label-accent" text={t('err.label')} />
           </Reveal>
           <DisplayReveal as="h1" className={`display d-lg ${shell.title}`}>
             {t('err.title')}
           </DisplayReveal>
-        </div>
+        </Drift>
         <Reveal delay={0.12} className={shell.lead}>
           <p className="body">{t('err.desc')}</p>
           <div className={styles.actions}>

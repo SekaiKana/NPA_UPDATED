@@ -9,12 +9,12 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Studio | Neural Point Analytica',
   description:
-    'The team, the principles and the commitments behind Neural Point Analytica, a software engineering studio in Tokyo.',
+    'Neural Point Analytica is a small team of engineers in Tokyo. Who we are and how we work.',
   alternates: { canonical: '/studio' },
   openGraph: {
     title: 'Studio | Neural Point Analytica',
     description:
-      'The team, the principles and the commitments behind Neural Point Analytica, a software engineering studio in Tokyo.',
+      'Neural Point Analytica is a small team of engineers in Tokyo. Who we are and how we work.',
     url: '/studio',
     siteName: 'Neural Point Analytica',
     locale: 'en_US',

@@ -4,7 +4,10 @@ import { useState, type FormEvent } from 'react';
 import { useLang } from '@/components/LangContext';
 import Reveal from '@/components/motion/Reveal';
 import DisplayReveal from '@/components/motion/DisplayReveal';
+import Decode from '@/components/motion/Decode';
+import Drift from '@/components/motion/Drift';
 import Magnetic from '@/components/motion/Magnetic';
+import DrawnRule from '@/components/ui/DrawnRule';
 import shell from '../page-shell.module.css';
 import styles from './contact.module.css';
 
@@ -49,14 +52,14 @@ export default function ContactPage() {
     <>
       <header className={`shell ${shell.masthead}`}>
         <div className={shell.mastheadInner}>
-          <div className={shell.mastLead}>
+          <Drift className={shell.mastLead} depth={0.12} fade={0.4}>
             <Reveal>
-              <span className="label">{t('contact.label')}</span>
+              <Decode className="label" text={t('contact.label')} />
             </Reveal>
             <DisplayReveal as="h1" className={`display d-lg ${shell.title}`}>
               {t('contact.title')}
             </DisplayReveal>
-          </div>
+          </Drift>
           <Reveal delay={0.12} className={shell.lead}>
             <p className="body">{t('contact.desc')}</p>
           </Reveal>
@@ -67,6 +70,7 @@ export default function ContactPage() {
         <div className={styles.grid}>
           <Reveal className={styles.formWrap}>
             <form className={styles.form} onSubmit={onSubmit} noValidate>
+              <DrawnRule />
               {/* Honeypot. Hidden from sight and from assistive tech, but a
                   bot filling every field will trip it. */}
               <div className={styles.honey} aria-hidden="true">
@@ -171,16 +175,17 @@ export default function ContactPage() {
           </Reveal>
 
           <Reveal delay={0.12} className={styles.aside}>
+            <DrawnRule delay={0.15} />
             <div className={styles.asideBlock}>
-              <span className="label">{t('contact.direct')}</span>
+              <Decode className="label" text={t('contact.direct')} />
               <a href={`mailto:${EMAIL}`} className={`${styles.bigEmail} link-u`}>
                 {EMAIL}
               </a>
             </div>
 
             <div className={styles.asideBlock}>
-              <span className="label">{t('contact.located')}</span>
-              <span className="meta">35.6762&#176; N, 139.6503&#176; E</span>
+              <Decode className="label" text={t('contact.located')} />
+              <Decode className="meta" text={'35.6762° N, 139.6503° E'} />
             </div>
           </Reveal>
         </div>

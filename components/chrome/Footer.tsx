@@ -5,6 +5,8 @@ import { useLang } from '@/components/LangContext';
 import { TransitionLink } from '@/components/motion/PageTransition';
 import Magnetic from '@/components/motion/Magnetic';
 import DisplayReveal from '@/components/motion/DisplayReveal';
+import Decode from '@/components/motion/Decode';
+import ShutterEdge from '@/components/motion/ShutterEdge';
 import Image from 'next/image';
 import styles from './Footer.module.css';
 
@@ -29,11 +31,14 @@ export default function Footer() {
 
   return (
     <footer className={`${styles.footer} invert`}>
+      {/* The ink rises into the page in five columns, the way a route change
+          covers it, and draws level before the first line of type. */}
+      <ShutterEdge />
       {showCta && (
         <section className={styles.cta}>
           <div className="shell">
-            <span className="label label-accent">{t('cta.label')}</span>
-            <DisplayReveal as="h2" className={`display d-lg ${styles.ctaTitle}`}>
+            <Decode key={`cta-label-${pathname}`} className="label label-accent" text={t('cta.label')} />
+            <DisplayReveal key={`cta-title-${pathname}`} as="h2" className={`display d-lg ${styles.ctaTitle}`}>
               {t('cta.title')}
             </DisplayReveal>
             <Magnetic>
@@ -65,7 +70,7 @@ export default function Footer() {
           </div>
 
           <nav className={styles.col} aria-label="Footer">
-            <span className="label">{t('footer.nav')}</span>
+            <Decode key={`nav-${pathname}`} className="label" text={t('footer.nav')} />
             <ul className={styles.list}>
               {INDEX.map((item) => (
                 <li key={item.href}>
@@ -78,7 +83,7 @@ export default function Footer() {
           </nav>
 
           <div className={styles.col}>
-            <span className="label">{t('footer.contact')}</span>
+            <Decode key={`contact-${pathname}`} className="label" text={t('footer.contact')} />
             <a href={`mailto:${EMAIL}`} className={`${styles.email} link-u`}>
               {EMAIL}
             </a>
@@ -87,7 +92,8 @@ export default function Footer() {
 
         <div className={styles.base}>
           <span className="meta">{t('footer.copy')}</span>
-          <span className="meta">35.6762&#176; N, 139.6503&#176; E</span>
+          {/* The studio's position, read off like an instrument settling. */}
+          <Decode key={`coords-${pathname}`} className="meta" text={'35.6762° N, 139.6503° E'} />
         </div>
       </div>
     </footer>

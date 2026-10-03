@@ -6,6 +6,11 @@
   padding-bottom: var(--s-5);
 }
 
+/* Without an aside the heading has the whole row. The two-column grid used to
+   stay in place with its second column empty, which capped the heading at a
+   little over half the width. */
+.solo { grid-template-columns: 1fr; }
+
 .lead {
   display: flex;
   flex-direction: column;

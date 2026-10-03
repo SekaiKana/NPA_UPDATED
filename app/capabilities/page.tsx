@@ -5,6 +5,8 @@ import Reveal from '@/components/motion/Reveal';
 import FloatingText from '@/components/motion/FloatingText';
 import FogReveal from '@/components/ui/FogReveal';
 import DisplayReveal from '@/components/motion/DisplayReveal';
+import Decode from '@/components/motion/Decode';
+import Drift from '@/components/motion/Drift';
 import IndexRow from '@/components/ui/IndexRow';
 import Caliper from '@/components/ui/Caliper';
 import shell from '../page-shell.module.css';
@@ -25,14 +27,14 @@ export default function CapabilitiesPage() {
     <>
       <header className={`shell ${shell.masthead}`}>
         <div className={shell.mastheadInner}>
-          <div className={shell.mastLead}>
+          <Drift className={shell.mastLead} depth={0.12} fade={0.4}>
             <Reveal>
-              <span className="label">{t('cap.label')}</span>
+              <Decode className="label" text={t('cap.label')} />
             </Reveal>
             <DisplayReveal as="h1" className={`display d-lg ${shell.title}`}>
               {t('cap.title')}
             </DisplayReveal>
-          </div>
+          </Drift>
           <Reveal delay={0.12} className={shell.lead}>
             {/* The haze the cursor wipes clear. Inside the reveal, so the
                 paragraph is what it blurs. */}

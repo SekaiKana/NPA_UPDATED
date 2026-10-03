@@ -6,6 +6,7 @@
 
 import { useRef } from 'react';
 import { gsap, SplitText } from '@/lib/motion/gsap';
+import Decode from '@/components/motion/Decode';
 import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
 import { useIsomorphicLayoutEffect } from '@/hooks/useIsomorphicLayoutEffect';
 import styles from './ScrollStatement.module.css';
@@ -95,13 +96,17 @@ export default function ScrollStatement({
 
     // One revert: the context owns the SplitText it created.
     return () => ctx.revert();
-  }, [reduced]);
+    /* `body` re-runs the split for new words after a language switch. The
+       paragraph is keyed on it too: React writes the new text over the split
+       words, and reverting the old split afterwards would put the old
+       language back, so the new text gets a fresh element instead. */
+  }, [reduced, body]);
 
   return (
     <section ref={sectionRef} className={styles.section}>
       <div className={`shell ${styles.inner}`}>
-        <span className={`label ${styles.label}`}>{label}</span>
-        <p ref={textRef} className={`display d-lg ${styles.text}`}>
+        <Decode className={`label ${styles.label}`} text={label} />
+        <p key={body} ref={textRef} className={`display d-lg ${styles.text}`}>
           {body}
         </p>
         <span ref={ruleRef} className={styles.rule} aria-hidden="true" />

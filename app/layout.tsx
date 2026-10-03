@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { EB_Garamond, Nunito, IBM_Plex_Mono } from 'next/font/google';
+import { EB_Garamond, Nunito } from 'next/font/google';
 import './globals.css';
 import Providers from '@/components/Providers';
 import Backdrop from '@/components/Backdrop';
@@ -21,36 +21,38 @@ const garamond = EB_Garamond({
   display: 'swap',
 });
 
-/* Body and UI. Nunito is a rounded terminal sans — softer than the rest of the
-   system by nature, so it is set a touch tighter than its defaults to keep it
-   from reading as loose beside the mono labels. Its large x-height means it
-   holds up at the small sizes the meta rows use. */
+/* Body, UI and labels. Nunito is a rounded terminal sans, softer than the
+   rest of the system by nature, so body copy is set a touch tighter than its
+   defaults. Its large x-height holds up at the small sizes the labels and
+   meta rows use, where it is set in bold capitals and tracked wide; those
+   were a monospace until the client asked for it to go (Sept 2026). */
 const nunito = Nunito({
   variable: '--font-nunito',
   subsets: ['latin', 'latin-ext'],
   display: 'swap',
 });
 
-/* Labels, data, annotations — the connective tissue of the whole layout. */
-const plexMono = IBM_Plex_Mono({
-  variable: '--font-plex-mono',
-  subsets: ['latin', 'latin-ext'],
-  weight: ['400', '500'],
-  display: 'swap',
-});
-
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.npanalytica.com'),
-  title: 'Custom B2B Software & AI Development Tokyo | Neural Point Analytica (NPA)',
+  title: 'Custom Software, AI and Data Engineering in Tokyo | Neural Point Analytica (NPA)',
   description:
-    'Rapid, elite software engineering for modern companies. Based in Tokyo, Neural Point Analytica builds custom B2B platforms, AI integrations, and high-performance internal tools.',
-  keywords: ['app development', 'B2B', 'custom software', 'AI development', 'RAG', 'Tokyo'],
+    'A small software studio in Tokyo. We build web platforms, AI and RAG systems, data pipelines, analytics, internal tools and 3D sites, starting from what each problem actually needs.',
+  keywords: [
+    'custom software',
+    'software development Tokyo',
+    'AI development',
+    'RAG',
+    'data pipelines',
+    'internal tools',
+    'web platforms',
+    'B2B',
+  ],
   alternates: { canonical: '/' },
   icons: { icon: '/NPA-transparent.png', apple: '/NPA-transparent.png' },
   openGraph: {
     title: 'Neural Point Analytica',
     description:
-      'We build your business into software. Custom B2B platforms, AI integrations and internal tooling, shipped fast.',
+      "A small team of engineers in Tokyo. Whatever the software problem, we'll work out what it needs and build it.",
     url: 'https://www.npanalytica.com',
     siteName: 'Neural Point Analytica',
     locale: 'en_US',
@@ -64,7 +66,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${garamond.variable} ${nunito.variable} ${plexMono.variable}`}
+      className={`${garamond.variable} ${nunito.variable}`}
     >
       <body>
         <Providers>

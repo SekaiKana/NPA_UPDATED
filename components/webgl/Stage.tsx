@@ -236,8 +236,15 @@ function Composite({
         createPortal(
           <>
             <HeroClump lowPower={tier !== 'high'} />
-            {/* Same scene, same lights, same shadow map as the cluster. */}
-            {tier === 'high' && <ParticleSpray />}
+            {/* Same scene, same lights, same shadow map as the cluster.
+                The original spray, as the client asked for it back (Sept
+                2026): its look and timing are untouched. It fires after the
+                process reel, at the client's request (Oct 2026): anchored to
+                the section that follows the reel, and fired as soon as that
+                section's top is a fifth of the way up the screen, which is the
+                moment the reel's last frame starts to scroll away. Waiting
+                for the reel to clear the screen entirely read as late. */}
+            {tier === 'high' && <ParticleSpray anchor="#approach" triggerAt={-0.8} />}
           </>,
           heroScene,
           { camera: heroCameraRef.current }

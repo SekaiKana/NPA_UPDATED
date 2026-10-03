@@ -36,8 +36,21 @@ import * as THREE from 'three';
 export interface ParticleSprayProps {
   /** Balls per burst. Each is an instance, not a draw call. */
   count?: number;
-  /** Scroll progress (0–1 of the scrollable range) that fires the burst. */
+  /**
+   * What fires the burst. Without `anchor`, scroll progress (0–1 of the
+   * scrollable range). With one, how many viewport heights the anchor's top
+   * edge has scrolled above the top of the screen.
+   */
   triggerAt?: number;
+  /**
+   * An element to fire relative to, instead of the page's overall length.
+   *
+   * A fraction of the page is only a place on the page for as long as the
+   * page stays the same length. Adding the reel to the homepage moved "half
+   * way down" from the capabilities index into the middle of the reel. Keyed
+   * to an element, it stays where it was put whatever is added around it.
+   */
+  anchor?: string;
   /** Re-arm when the visitor scrolls back above the threshold. */
   repeat?: boolean;
   /** Smallest and largest ball radius, in world units. */
@@ -77,6 +90,7 @@ interface Ball {
 export default function ParticleSpray({
   count = 30,
   triggerAt = 0.5,
+  anchor,
   repeat = true,
   sizeRange = [0.13, 0.46],
   releaseWindow = 18,
@@ -158,9 +172,21 @@ export default function ParticleSpray({
     const state = stateRef.current;
 
     /* ---- Where the visitor is on the page ---- */
-    const scrollable =
-      document.documentElement.scrollHeight - window.innerHeight;
-    const progress = scrollable > 0 ? window.scrollY / scrollable : 0;
+    let progress: number;
+    let hysteresis: number;
+    if (anchor) {
+      const anchorEl = document.querySelector(anchor);
+      // No anchor on this page means nothing to fire against.
+      progress = anchorEl
+        ? -anchorEl.getBoundingClientRect().top / window.innerHeight
+        : -Infinity;
+      hysteresis = 0.5;
+    } else {
+      const scrollable =
+        document.documentElement.scrollHeight - window.innerHeight;
+      progress = scrollable > 0 ? window.scrollY / scrollable : 0;
+      hysteresis = 0.06;
+    }
 
     if (state.armed && progress >= triggerAt) {
       state.armed = false;
@@ -169,7 +195,7 @@ export default function ParticleSpray({
       arm();
     } else if (repeat && !state.firing && !state.armed) {
       // A little hysteresis, so hovering exactly on the line cannot stutter.
-      if (progress < triggerAt - 0.06) state.armed = true;
+      if (progress < triggerAt - hysteresis) state.armed = true;
     }
 
     if (!state.firing) {

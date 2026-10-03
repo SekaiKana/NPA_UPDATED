@@ -7,16 +7,16 @@ import type { Metadata } from 'next';
  * inheriting the homepage's from the root layout.
  */
 export const metadata: Metadata = {
-  title: 'Work — in preparation | Neural Point Analytica',
+  title: 'Work (in preparation) | Neural Point Analytica',
   description:
-    'Case studies from Neural Point Analytica are being written up. Ask us directly about what we have built.',
+    'Case studies from Neural Point Analytica are on the way. Ask us about what we have built.',
   alternates: { canonical: '/work' },
   /* Resolves rather than 404s, but there is nothing here to index yet. */
   robots: { index: false, follow: true },
   openGraph: {
-    title: 'Work — in preparation | Neural Point Analytica',
+    title: 'Work (in preparation) | Neural Point Analytica',
     description:
-      'Case studies from Neural Point Analytica are being written up. Ask us directly about what we have built.',
+      'Case studies from Neural Point Analytica are on the way. Ask us about what we have built.',
     url: '/work',
     siteName: 'Neural Point Analytica',
     locale: 'en_US',

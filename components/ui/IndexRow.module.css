@@ -1,9 +1,39 @@
+/* The rules are drawn by pseudo-elements rather than borders so they can be
+   ruled in from the left as the row arrives (see `useDrawn`). The borders stay,
+   transparent, so the row's box and everything measured against it, the
+   caliper included, is exactly what it was. */
 .row {
   position: relative;
-  border-top: 1px solid var(--rule);
+  border-top: 1px solid transparent;
 }
 
-.row:last-child { border-bottom: 1px solid var(--rule); }
+.row:last-child { border-bottom: 1px solid transparent; }
+
+.row::before,
+.row:last-child::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--rule);
+  transform-origin: left center;
+  pointer-events: none;
+  transition: transform 1.25s var(--ease) var(--draw-delay, 0s);
+}
+
+.row::before { top: -1px; }
+
+/* The list's closing rule follows its last row's opening one. */
+.row:last-child::after {
+  bottom: -1px;
+  transition-delay: calc(var(--draw-delay, 0s) + 0.12s);
+}
+
+.row[data-draw='pending']::before,
+.row[data-draw='pending']:last-child::after {
+  transform: scaleX(0);
+}
 
 .hit {
   position: relative;
@@ -22,9 +52,10 @@
    structure and type, and carries no hover rules of its own. */
 
 .index {
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  letter-spacing: 0.16em;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
   /* Deepens toward ink as the row comes alive — the shift in emphasis that
      goes with the scale pop in rowFx. Mixing rather than swapping keeps the
      walnut hue, and keeps the resting colour exactly what it was: with `--on`
@@ -54,8 +85,9 @@
   align-items: baseline;
   justify-content: space-between;
   gap: var(--s-2);
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 700;
   letter-spacing: 0.1em;
   color: var(--ink-3);
   text-transform: uppercase;

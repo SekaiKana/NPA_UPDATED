@@ -1,4 +1,6 @@
 .section {
+  /* Positioned for the shutter edge along its top. */
+  position: relative;
   padding-block: var(--s-8);
   color: var(--ink);
 }
@@ -42,9 +44,10 @@
 }
 
 .stepIndex {
-  font-family: var(--font-mono);
-  font-size: 0.625rem;
-  letter-spacing: 0.2em;
+  font-family: var(--font-sans);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
   /* See IndexRow.module.css: plain --accent until the step is live. Inverted
      here, so the mix toward --ink brightens the tint. */
   color: color-mix(in srgb, var(--accent), var(--ink) calc(var(--on, 0) * 45%));

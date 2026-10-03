@@ -4,6 +4,8 @@ import { useState } from 'react';
 import { useLang } from '@/components/LangContext';
 import Reveal from '@/components/motion/Reveal';
 import DisplayReveal from '@/components/motion/DisplayReveal';
+import Decode from '@/components/motion/Decode';
+import ShutterEdge from '@/components/motion/ShutterEdge';
 import styles from './Commitment.module.css';
 import fx from '@/components/ui/rowFx.module.css';
 
@@ -23,9 +25,11 @@ export default function Commitment() {
 
   return (
     <section className={`${styles.section} invert`}>
+      {/* The page's one ink band arrives the way a page does: in shutters. */}
+      <ShutterEdge />
       <div className="shell">
         <Reveal>
-          <span className="label label-accent">{t('studio.commitment.label')}</span>
+          <Decode className="label label-accent" text={t('studio.commitment.label')} />
         </Reveal>
         <DisplayReveal as="h2" className={`display d-md ${styles.title}`}>
           {t('studio.commitment.title')}

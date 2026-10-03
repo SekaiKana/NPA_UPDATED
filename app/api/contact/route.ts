@@ -74,7 +74,7 @@ export async function POST(request: Request) {
 
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
-    console.error('[contact] RESEND_API_KEY is not set — enquiry not delivered.');
+    console.error('[contact] RESEND_API_KEY is not set, so the enquiry was not delivered.');
     return NextResponse.json({ ok: false, error: 'not_configured' }, { status: 503 });
   }
 
@@ -85,7 +85,7 @@ export async function POST(request: Request) {
       to: [TO],
       // So hitting reply in the inbox goes to the enquirer, not to Resend.
       replyTo: email,
-      subject: `Enquiry — ${name}${company ? ` (${company})` : ''}`,
+      subject: `Enquiry from ${name}${company ? ` (${company})` : ''}`,
       text: [
         `Name: ${name}`,
         `Email: ${email}`,
