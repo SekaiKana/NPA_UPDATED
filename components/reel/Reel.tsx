@@ -9,6 +9,7 @@ import { useLang } from '@/components/LangContext';
 import { useLenis } from '@/components/motion/SmoothScroll';
 import SectionHead from '@/components/ui/SectionHead';
 import { useIsomorphicLayoutEffect } from '@/hooks/useIsomorphicLayoutEffect';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
 import { gsap, SplitText } from '@/lib/motion/gsap';
 import { ReelEngine } from '@/lib/reel/engine';
@@ -23,6 +24,12 @@ import styles from './Reel.module.css';
 const noopSubscribe = () => () => {};
 const useHydrated = () =>
   useSyncExternalStore(noopSubscribe, () => true, () => false);
+
+/* Phones, upright or on their side. The six landscape drawings had to be
+   squeezed into the top half of an upright screen, and the pinned track is
+   five screens of scrolling, so the reel is left out there altogether.
+   Mirrored in Reel.module.css, which hides the server HTML before hydration. */
+const PHONE = '(max-width: 720px), (pointer: coarse) and (max-height: 500px)';
 
 const pad2 = (n: number) => String(n).padStart(2, '0');
 
@@ -67,11 +74,14 @@ function readTheme(root: HTMLElement): ReelTheme {
  * Under reduced motion, and in the server HTML, it is a storyboard instead:
  * the same six shots as stills with their captions, which is both the
  * accessible version and a perfectly good way to read the section.
+ *
+ * Phones get neither (see `PHONE`).
  */
 export default function Reel() {
   const { t, lang } = useLang();
   const reduced = usePrefersReducedMotion();
   const hydrated = useHydrated();
+  const phone = useMediaQuery(PHONE);
   const live = hydrated && !reduced;
 
   const shots: Shot[] = SHOTS.map((s, i) => ({
@@ -91,6 +101,8 @@ export default function Reel() {
     deploy: t('reel.c.deploy'),
     mvp: t('reel.c.mvp'),
   };
+
+  if (phone) return null;
 
   return (
     <section className={styles.reel} id="process" data-mode={live ? 'live' : 'still'}>
