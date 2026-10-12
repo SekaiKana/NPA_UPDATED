@@ -52,6 +52,8 @@ const translations: Record<string, Record<Lang, string>> = {
   'nav.cta': { EN: 'Start a project', JP: '相談する' },
   'nav.menu': { EN: 'Menu', JP: 'メニュー' },
   'nav.close': { EN: 'Close', JP: '閉じる' },
+  'nav.primary': { EN: 'Primary', JP: 'メイン' },
+  'nav.language': { EN: 'Language', JP: '言語' },
 
   // ---- Home: hero -------------------------------------------------------
   'home.hero.l1': { EN: 'Whatever', JP: 'どんな' },

@@ -75,14 +75,12 @@
 
 .skip {
   font-family: var(--font-sans);
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
   color: var(--ink-3);
 }
 
 @media (max-width: 640px) {
   .grid { gap: 12vh; }
-  .skip { letter-spacing: 0.18em; }
 }

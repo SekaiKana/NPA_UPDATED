@@ -187,17 +187,17 @@ export class TimelineFormation implements Formation {
 
       /* Each week named under its seven days: done in ink, this one in
          walnut, the one still to come in grey. */
-      g.font = `700 ${portrait ? 9 : 10}px ${theme.label}`;
+      g.font = `600 ${portrait ? 11 : 12}px ${theme.label}`;
       const thisWeek = Math.min(WEEKS - 1, Math.floor(days / 7));
       for (let w = 0; w < WEEKS; w += 1) {
         g.globalAlpha = vis;
         g.fillStyle = w === thisWeek ? theme.accent : w < thisWeek ? theme.ink : theme.ink3;
-        const name = copy.weekOf.replace('{n}', String(w + 1)).toUpperCase();
-        label(g, name, this.x0 + (w * 7 + 3.5) * this.dayW, this.axisY + 22, portrait ? 1.6 : 2.2, 'center');
+        const name = copy.weekOf.replace('{n}', String(w + 1));
+        label(g, name, this.x0 + (w * 7 + 3.5) * this.dayW, this.axisY + 22, 0.2, 'center');
       }
 
       // Deploy flags, raised at the end of each week on the site's spring.
-      g.font = `700 ${portrait ? 9 : 10}px ${theme.label}`;
+      g.font = `600 ${portrait ? 11 : 12}px ${theme.label}`;
       DEPLOY_DAYS.forEach((w, k) => {
         /* The last flag has to go up inside the fortnight, not at its edge:
            the playhead stops at day 14, so a flag triggered there would only
@@ -219,9 +219,9 @@ export class TimelineFormation implements Formation {
         g.fill();
         const text =
           w === DAYS
-            ? `${copy.deploy.toUpperCase()} ${pad(k + 1)} / ${copy.mvp.toUpperCase()}`
-            : `${copy.deploy.toUpperCase()} ${pad(k + 1)}`;
-        label(g, text, x - 8, top + 4, portrait ? 1.4 : 2, 'right', clamp(pop * 1.3));
+            ? `${copy.deploy} ${pad(k + 1)} / ${copy.mvp}`
+            : `${copy.deploy} ${pad(k + 1)}`;
+        label(g, text, x - 8, top + 4, 0.2, 'right', clamp(pop * 1.3));
       });
       g.globalAlpha = 1;
       return;
@@ -249,10 +249,10 @@ export class TimelineFormation implements Formation {
     /* On a tall frame there is no free corner for a large counter, so the
        week rides on the playhead instead. */
     if (portrait) {
-      g.font = `700 9px ${theme.label}`;
-      const text = `${copy.week.toUpperCase()} ${pad(whole)}/${pad(WEEKS)}`;
+      g.font = `600 11px ${theme.label}`;
+      const text = `${copy.week} ${pad(whole)}/${pad(WEEKS)}`;
       const right = xp > W * 0.6;
-      label(g, text, xp + (right ? -10 : 10), this.colTop - 17, 1.4, right ? 'right' : 'left');
+      label(g, text, xp + (right ? -10 : 10), this.colTop - 17, 0.2, right ? 'right' : 'left');
       g.globalAlpha = 1;
       return;
     }
@@ -290,10 +290,10 @@ export class TimelineFormation implements Formation {
     }
     g.textAlign = 'left';
 
-    g.font = `700 10px ${theme.label}`;
+    g.font = `600 12px ${theme.label}`;
     g.fillStyle = theme.ink3;
     g.globalAlpha = vis;
-    label(g, `${copy.week.toUpperCase()} / ${pad(WEEKS)}`, right, base - size * 0.92, 2.2, 'right');
+    label(g, `${copy.week} / ${pad(WEEKS)}`, right, base - size * 0.92, 0.2, 'right');
     g.globalAlpha = 1;
   }
 }

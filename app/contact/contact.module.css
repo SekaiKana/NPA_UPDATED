@@ -63,10 +63,9 @@
 
 .req {
   font-family: var(--font-sans);
-  font-size: 0.625rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
   color: var(--accent);
 }
 
@@ -121,10 +120,9 @@
   border: 1px solid var(--ink);
   border-radius: 999px;
   font-family: var(--font-sans);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
   transition: background var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
 }
 

@@ -10,7 +10,7 @@ import { whenUncovered } from '@/lib/motion/curtain';
 import { useIsomorphicLayoutEffect } from '@/hooks/useIsomorphicLayoutEffect';
 import { usePrefersReducedMotion } from '@/hooks/usePrefersReducedMotion';
 
-const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+const LETTERS = 'abcdefghijklmnopqrstuvwxyz0123456789';
 const DIGITS = '0123456789';
 
 /**
@@ -19,7 +19,7 @@ const DIGITS = '0123456789';
  *
  * It is the reel's HUD vocabulary applied to the site's small labels, so the
  * small type everywhere behaves like part of the same instrument. Latin text
- * scrambles through capitals and figures; figures alone through figures;
+ * scrambles through lowercase letters and figures; figures alone through figures;
  * Japanese through its own characters, since a Latin scramble resolving into
  * kana looks like an encoding fault.
  *

@@ -24,7 +24,7 @@ const garamond = EB_Garamond({
 /* Body, UI and labels. Nunito is a rounded terminal sans, softer than the
    rest of the system by nature, so body copy is set a touch tighter than its
    defaults. Its large x-height holds up at the small sizes the labels and
-   meta rows use, where it is set in bold capitals and tracked wide; those
+   meta rows use, set semibold in sentence case; those
    were a monospace until the client asked for it to go (Sept 2026). */
 const nunito = Nunito({
   variable: '--font-nunito',

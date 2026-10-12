@@ -73,10 +73,9 @@
 
 .tag {
   font-family: var(--font-sans);
-  font-size: 0.625rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
   color: var(--ink-3);
   border: 1px solid var(--rule);
   border-radius: 999px;
@@ -88,11 +87,10 @@
   flex-direction: column;
   gap: 0.5rem;
   font-family: var(--font-sans);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
   color: var(--ink-3);
-  text-transform: uppercase;
   padding-top: 0.3rem;
 }
 
@@ -112,7 +110,6 @@
   padding: 0.35rem 0.6rem;
   border: 1px dashed var(--rule-strong);
   border-radius: 2px;
-  letter-spacing: 0.12em;
   color: var(--ink-2);
 }
 

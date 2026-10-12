@@ -185,7 +185,6 @@ export default function ContactPage() {
 
             <div className={styles.asideBlock}>
               <Decode className="label" text={t('contact.located')} />
-              <Decode className="meta" text={'35.6762° N, 139.6503° E'} />
             </div>
           </Reveal>
         </div>

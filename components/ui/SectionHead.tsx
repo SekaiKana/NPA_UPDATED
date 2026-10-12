@@ -10,7 +10,7 @@ import styles from './SectionHead.module.css';
  * The label-plus-display pairing that opens every section.
  *
  * Keeping it in one component is what holds the 12:1 size relationship between
- * the small capitals of the label and the serif heading consistent across
+ * the small sans label and the serif heading consistent across
  * every page; that ratio is the core of the editorial system and is easy to
  * erode by hand.
  */

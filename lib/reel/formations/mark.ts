@@ -170,10 +170,10 @@ export class MarkFormation implements Formation {
 
     /* The name, typed on under the mark. Nothing is drawn round the mark
        itself: it stands on the page the way the rest of the reel does. */
-    g.font = `700 10px ${theme.label}`;
+    g.font = `600 12px ${theme.label}`;
     g.fillStyle = theme.ink3;
     g.globalAlpha = vis;
-    label(g, 'NEURAL POINT ANALYTICA', x + w / 2, y + h + 44, 2.4, 'center', progress(0.25, 0.6, s));
+    label(g, 'Neural Point Analytica', x + w / 2, y + h + 44, 0.2, 'center', progress(0.25, 0.6, s));
     g.globalAlpha = 1;
   }
 }

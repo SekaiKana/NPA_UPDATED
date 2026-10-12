@@ -60,7 +60,7 @@ export default function Error({
             </a>
           </div>
           {error.digest && (
-            <span className={`meta ${styles.digest}`}>REF {error.digest}</span>
+            <span className={`meta ${styles.digest}`}>Ref. {error.digest}</span>
           )}
         </Reveal>
       </div>

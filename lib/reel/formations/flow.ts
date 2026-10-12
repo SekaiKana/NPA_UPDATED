@@ -149,7 +149,7 @@ export class FlowFormation implements Formation {
     }
 
     /* ---- Over the points: the instruments ---- */
-    g.font = `700 10px ${theme.label}`;
+    g.font = `600 12px ${theme.label}`;
     g.textBaseline = 'alphabetic';
 
     // The throat, dimensioned, and named. It fades as the throat stops being one.
@@ -172,15 +172,15 @@ export class FlowFormation implements Formation {
       g.lineTo(lx, ly + 6);
       if (!portrait) g.lineTo(lx + 124, ly + 6);
       g.stroke();
-      label(g, copy.bottleneck.toUpperCase(), portrait ? lx : lx + 2, ly, 2.4, portrait ? 'center' : 'left');
+      label(g, copy.bottleneck, portrait ? lx : lx + 2, ly, 0.2, portrait ? 'center' : 'left');
     }
 
     /* The readouts. Live figures off the simulation, drawn like a panel
        meter: the name in the quiet ink, the value in the strong one. */
     const read = vis * (1 - sim.widen * 0.9);
     if (read > 0.01) {
-      const qText = `${copy.queue.toUpperCase()} `;
-      const tText = `${copy.throughput.toUpperCase()} `;
+      const qText = `${copy.queue} `;
+      const tText = `${copy.throughput} `;
       const qVal = pad(sim.queue, 4);
       const tVal = `${pad(sim.throughput, 2)}/S`;
       g.globalAlpha = read;
@@ -188,28 +188,28 @@ export class FlowFormation implements Formation {
       if (portrait) {
         const y = sim.yc + sim.hw + 30;
         g.fillStyle = theme.ink3;
-        const w = label(g, qText, P, y, 1.6);
+        const w = label(g, qText, P, y, 0.2);
         g.fillStyle = theme.ink;
-        label(g, qVal, P + w + 4, y, 1.6);
+        label(g, qVal, P + w + 4, y, 0.2);
         g.fillStyle = theme.ink;
-        const vw = label(g, tVal, W - P, y, 1.6, 'right');
+        const vw = label(g, tVal, W - P, y, 0.2, 'right');
         g.fillStyle = theme.ink3;
-        label(g, tText, W - P - vw - 4, y, 1.6, 'right');
+        label(g, tText, W - P - vw - 4, y, 0.2, 'right');
       } else {
         const y = sim.yc - sim.hw - 18;
         const qx = sim.xt - sim.lin * 0.8;
         g.fillStyle = theme.ink3;
-        const w = label(g, qText, qx, y, 2.2);
+        const w = label(g, qText, qx, y, 0.2);
         g.fillStyle = theme.ink;
-        label(g, qVal, qx + w + 4, y, 2.2);
+        label(g, qVal, qx + w + 4, y, 0.2);
 
         // After the throat, but pulled back inside the frame on a narrow one.
         const need = trackedWidth(g, tText, 2.2) + 4 + trackedWidth(g, tVal, 2.2);
         const tx = Math.min(sim.xt + sim.lout + 40, W - P - need);
         g.fillStyle = theme.ink3;
-        const w2 = label(g, tText, tx, y, 2.2);
+        const w2 = label(g, tText, tx, y, 0.2);
         g.fillStyle = theme.ink;
-        label(g, tVal, tx + w2 + 4, y, 2.2);
+        label(g, tVal, tx + w2 + 4, y, 0.2);
       }
     }
     g.globalAlpha = 1;

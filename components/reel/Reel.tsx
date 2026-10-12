@@ -254,7 +254,7 @@ function LiveReel({
         duration: 0.7,
         scrambleText: {
           text: next,
-          chars: /[A-Za-z]/.test(next) ? 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' : next,
+          chars: /[A-Za-z]/.test(next) ? 'abcdefghijklmnopqrstuvwxyz' : next,
           speed: 0.6,
         },
         overwrite: true,
@@ -383,7 +383,7 @@ function LiveReel({
 
   /* ---- Per language: the canvas's words, the HUD, and the caption split ---- */
   useIsomorphicLayoutEffect(() => {
-    namesRef.current = shots.map((s) => s.name.toUpperCase());
+    namesRef.current = shots.map((s) => s.name);
     engineRef.current?.setCopy(copy);
     const name = shotNameRef.current;
     if (name) {

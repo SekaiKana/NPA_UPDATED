@@ -1,279 +1,366 @@
+/* =============================================================
+   THE ISLAND
+   One floating pill at the top of the screen. It sizes to its
+   contents and changes shape with the page: full at the top,
+   compact reading down, and on phones it grows into the menu.
+   The controller in Navigation.tsx writes `data-mode` on the pill
+   (absent means full) and springs the glass between sizes.
+   ============================================================= */
+
 .header {
   position: fixed;
-  top: 0;
+  top: calc(env(safe-area-inset-top, 0px) + var(--island-top));
   left: 0;
   right: 0;
   z-index: 500;
-  padding-top: env(safe-area-inset-top, 0px);
+  display: flex;
+  justify-content: center;
+  padding-inline: var(--island-top);
+  /* Only the pill takes the pointer; the strip either side stays the page's. */
+  pointer-events: none;
+
+  --island-top: 12px;
+  --open-r: 26px;
+  --on-accent: #f0efec;
+  /* The highlight behind a hovered link, and the active page's at rest. */
+  --hl: color-mix(in srgb, var(--ink) 9%, transparent);
+  --glass-edge: rgba(18, 18, 18, 0.1);
+  --glass-shadow: 0 10px 30px -14px rgba(18, 18, 18, 0.32), 0 1px 3px rgba(18, 18, 18, 0.06);
+}
+
+/* While an ink-ground section is under the island, it turns to ink glass
+   with light type. Redefining the tokens means every child follows. */
+.onDark {
+  --ink: #f0efec;
+  --ink-2: #c4c3be;
+  --ink-3: #a8a7a1;
+  --ground: #121212;
+  --rule: rgba(240, 239, 236, 0.18);
+  --accent: var(--accent-tint);
+  --on-accent: #121212;
+  --hl: rgba(240, 239, 236, 0.12);
+  --glass-edge: rgba(240, 239, 236, 0.14);
+  --glass-shadow: 0 10px 30px -14px rgba(0, 0, 0, 0.6), 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.pill {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+  padding: 6px;
+  pointer-events: auto;
+  color: var(--ink);
+}
+
+/* ---- The glass ----
+   Its own empty layer, so its size can spring independently of the
+   contents. At rest it fills the pill; during a change the controller
+   sizes it in pixels from the pill's top centre and then lets go. */
+.glass {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  transform: translateX(-50%);
+  border-radius: 999px;
+  border: 1px solid var(--glass-edge);
+  /* 70% let display type the size of the hero's show through as dark
+     shapes behind the links; 82% with a wider blur keeps them a haze. */
+  background: color-mix(in srgb, var(--ground) 82%, transparent);
+  backdrop-filter: blur(28px) saturate(1.4);
+  -webkit-backdrop-filter: blur(28px) saturate(1.4);
+  box-shadow: var(--glass-shadow);
+  pointer-events: none;
+  contain: layout style;
+  transition: background-color var(--t-mid) var(--ease),
+    border-color var(--t-mid) var(--ease), box-shadow var(--t-mid) var(--ease);
+}
+
+/* Without a backdrop blur, nearly opaque, so the type never sits on
+   unblurred detail. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass { background: color-mix(in srgb, var(--ground) 94%, transparent); }
+}
+
+.bar,
+.menu {
+  position: relative;
 }
 
 .bar {
-  max-width: var(--measure);
-  margin-inline: auto;
-  height: var(--nav-h);
-  padding-inline: var(--gutter);
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--s-3);
-}
-
-/* The rule draws itself in once the page moves, rather than the whole bar
-   acquiring a background — keeps the hero uninterrupted. */
-.rule {
-  display: block;
-  height: 1px;
-  background: var(--rule);
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: transform var(--t-slow) var(--ease);
-}
-
-.condensed .rule { transform: scaleX(1); }
-
-/* On the header, not the bar: the bar is capped at --measure, so putting the
-   ground on it leaves an unpainted gutter down each side at wide viewports. */
-.condensed {
-  background: color-mix(in srgb, var(--ground) 88%, transparent);
-  backdrop-filter: blur(16px) saturate(1.2);
-  -webkit-backdrop-filter: blur(16px) saturate(1.2);
-}
-
-/* While an ink-ground section is under the bar, the whole chrome inverts.
-   Redefining the tokens rather than overriding each rule means every child —
-   links, language toggle, burger, CTA — follows automatically. */
-.onDark {
-  --ink: #f0efec;
-  --ink-2: #a8a7a1;
-  --ink-3: #8b8a84;
-  --ground: #121212;
-  --rule: rgba(240, 239, 236, 0.18);
-  --rule-strong: rgba(240, 239, 236, 0.36);
-  color: #f0efec;
-}
-
-.onDark.condensed {
-  background: color-mix(in srgb, #121212 88%, transparent);
+  gap: 4px;
 }
 
 /* ---- Mark ---- */
 
 .mark {
-  display: flex;
-  align-items: baseline;
-  gap: 0.6rem;
-  flex-shrink: 0;
-}
-
-.markGlyph {
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  padding-inline: 14px 10px;
+  border-radius: 999px;
   font-family: var(--font-display);
   font-weight: 600;
   font-size: 1.35rem;
   letter-spacing: -0.02em;
   line-height: 1;
-}
-
-/* Set in the display serif, beside the mark it spells out, rather than in
-   the bold capitals of the links: it is a name, not a control. The tracking
-   is what a text face can hold, and the size comes up to match. */
-.markFull {
-  font-family: var(--font-display);
-  font-size: 0.8125rem;
-  font-weight: 500;
-  letter-spacing: 0.06em;
-  color: var(--ink-3);
-  white-space: nowrap;
-}
-
-/* ---- Links ---- */
-
-.links {
-  display: flex;
-  align-items: center;
-  gap: var(--s-4);
-}
-
-.link {
-  font-family: var(--font-sans);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ink-2);
-}
-
-.link:hover { color: var(--ink); }
-
-.active { color: var(--ink); }
-.active::after { transform: scaleX(1); }
-
-/* ---- End cluster ---- */
-
-.end {
-  display: flex;
-  align-items: center;
-  gap: var(--s-3);
   flex-shrink: 0;
 }
+
+/* ---- Links and the sliding highlight ---- */
+
+.links {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* One fill the width of the group, clipped down to a single link. Moving
+   the clip slides it; the spring gives it a little give on arrival. */
+.indicator {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: var(--hl);
+  opacity: 0;
+  clip-path: inset(0 100% 0 0 round 999px);
+  pointer-events: none;
+  transition: clip-path var(--t-spring) var(--ease-spring), opacity var(--t-fast) var(--ease);
+}
+
+.indicator[data-state='rest'] { opacity: 0.6; }
+.indicator[data-state='hover'] { opacity: 1; }
+
+.link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  padding-inline: 14px;
+  border-radius: 999px;
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ink-2);
+  white-space: nowrap;
+  transition: color var(--t-fast) var(--ease);
+}
+
+.link:hover,
+.active { color: var(--ink); }
+
+/* ---- Language ---- */
 
 .lang {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
+  padding-inline: 8px;
   font-family: var(--font-sans);
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.04em;
 }
 
-/* Two letters make a target a thumb cannot hit: EN and JP measured 15 by 18
-   and 11 by 18 pixels on a phone. The hit area is padded out to roughly 33 by
-   44 and pulled back with a matching negative margin, so nothing moves on
-   screen. */
+.langItem {
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Two letters make a target a thumb cannot hit; each button is the
+   pill's full 40px tall and padded to about 32 wide. */
 .lang button {
-  padding: 0.8rem 0.55rem;
-  margin: -0.8rem -0.55rem;
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  padding-inline: 0.45rem;
+  border-radius: 999px;
 }
 
 .langOn { color: var(--ink); }
 .langOff { color: var(--ink-3); }
 .langOff:hover { color: var(--ink-2); }
-.langSlash { color: var(--rule-strong); }
+.langSlash { color: var(--ink-3); opacity: 0.6; }
 
-.ctaWrap { display: inline-block; }
+/* ---- Call to action: a pill inside the pill ---- */
 
-.cta {
+.cta,
+.mCta {
   display: inline-flex;
   align-items: center;
-  height: 36px;
-  padding-inline: 1.15rem;
-  border: 1px solid var(--ink);
+  height: 40px;
+  padding-inline: 18px;
   border-radius: 999px;
-  font-family: var(--font-sans);
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  transition: background var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
-}
-
-.cta:hover {
   background: var(--ink);
   color: var(--ground);
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
 }
 
-/* ---- Burger ---- */
+.cta:hover,
+.mCta:hover {
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+/* ---- Menu button ---- */
 
 .burger {
   display: none;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   gap: 6px;
-  width: 44px;
-  height: 44px;
-  padding-inline: 10px;
+  width: 40px;
+  height: 40px;
+  margin-left: auto;
+  border-radius: 999px;
+  flex-shrink: 0;
 }
 
 .burgerLine {
   display: block;
-  height: 1px;
-  width: 100%;
+  width: 18px;
+  height: 1.5px;
+  border-radius: 1px;
   background: var(--ink);
-  transition: transform var(--t-fast) var(--ease-io),
-    opacity var(--t-fast) var(--ease-io);
+  transition: transform var(--t-mid) var(--ease-spring);
 }
 
-.bl1 { transform: translateY(3.5px) rotate(45deg); }
-.bl2 { transform: translateY(-3.5px) rotate(-45deg); }
+.burger[aria-expanded='true'] .burgerLine:first-child { transform: translateY(3.75px) rotate(45deg); }
+.burger[aria-expanded='true'] .burgerLine:last-child { transform: translateY(-3.75px) rotate(-45deg); }
 
-/* ---- Overlay ---- */
-
-.overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 400;
-  background: var(--ground-ink);
-  color: #f0efec;
-  visibility: hidden;
-  clip-path: inset(0 0 100% 0);
-  display: flex;
-  align-items: flex-end;
+/* Inside the island the global ring would sit 4px out and crowd the
+   neighbouring control; this keeps it to the control's own shape. */
+.pill :focus-visible {
+  outline-offset: 2px;
 }
 
-.overlayInner {
-  width: 100%;
-  padding: var(--gutter);
-  padding-top: calc(var(--nav-h) + env(safe-area-inset-top, 0px) + var(--s-4));
-  padding-bottom: calc(var(--gutter) + env(safe-area-inset-bottom, 0px));
-  display: flex;
-  flex-direction: column;
-  gap: var(--s-4);
-}
+/* ---- Compact ---- */
+
+.pill[data-mode='compact'] { padding: 4px; }
+.pill[data-mode='compact'] .links,
+.pill[data-mode='compact'] .lang { display: none; }
+
+/* ---- The menu (phones and small tablets) ---- */
+
+.menu { display: none; }
 
 .mLinks {
   list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 0.2rem;
+  padding: 10px 10px 4px;
 }
 
-.mLink { overflow: hidden; }
-
-.mLinkInner {
+.mLink {
   display: flex;
   align-items: baseline;
-  gap: 1rem;
-  width: 100%;
-  text-align: left;
+  gap: 0.9rem;
+  padding-block: 0.2rem;
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: clamp(2.5rem, 11vw, 5.5rem);
-  line-height: 1.04;
+  font-size: clamp(2.1rem, 9.5vw, 3rem);
+  line-height: 1.1;
   letter-spacing: -0.02em;
-  color: #f0efec;
-  padding-block: 0.06em;
+  color: var(--ink);
 }
+
+.mLink[aria-current='page'] { color: var(--accent); }
 
 .mIndex {
   font-family: var(--font-sans);
-  font-weight: 700;
-  font-size: 0.6875rem;
-  letter-spacing: 0.16em;
-  color: var(--accent-tint);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
 }
 
-.overlayFoot {
+.mRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-2);
+  margin: 14px 10px 0;
+  padding-top: 14px;
+  border-top: 1px solid var(--rule);
+}
+
+.mRow .lang { padding-inline: 0; margin-left: -0.45rem; }
+
+.mFoot {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  gap: var(--s-2);
-  padding-top: var(--s-3);
-  border-top: 1px solid rgba(240, 239, 236, 0.18);
+  gap: 0.4rem var(--s-2);
+  margin: 14px 10px 10px;
   font-family: var(--font-sans);
   font-size: 0.8125rem;
   font-weight: 600;
-  color: #a8a7a1;
+  color: var(--ink-3);
+}
+
+.mFoot a:hover { color: var(--ink); }
+
+/* Dims the page behind the open menu; a tap on it closes the menu. */
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 490;
+  background: rgba(18, 18, 18, 0.28);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--t-mid) var(--ease);
+}
+
+.scrim[data-open] {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 /* ---- Responsive ---- */
 
-@media (max-width: 1100px) {
-  .markFull { display: none; }
-  .links { gap: var(--s-3); }
+@media (max-width: 880px) {
+  .links,
+  .lang,
+  .cta { display: none; }
+  .mRow .lang { display: flex; }
+  .burger { display: flex; }
+
+  .pill { padding: 4px; min-width: 9.5rem; }
+  .bar { gap: var(--s-2); }
+  .pill[data-mode='compact'] { padding: 3px; }
+
+  /* Open, the same shape grows into a card most of the screen wide. */
+  .pill[data-mode='open'] {
+    width: min(100%, 30rem);
+    padding: 6px;
+  }
+  .pill[data-mode='open'] .glass {
+    border-radius: var(--open-r);
+    background: color-mix(in srgb, var(--ground) 92%, transparent);
+  }
+  .pill[data-mode='open'] .menu {
+    display: block;
+    max-height: calc(100svh - 2 * var(--island-top) - 52px - env(safe-area-inset-top, 0px));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
 }
 
-@media (max-width: 880px) {
-  .links { display: none; }
-  .cta { display: none; }
-  .burger { display: flex; }
+@media (min-width: 881px) {
+  .scrim { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .overlay {
-    clip-path: none;
-    transition: none;
-  }
-  .overlay[hidden] { display: none; }
-  .rule { transform: scaleX(1); }
+  .indicator { transition: opacity var(--t-fast) linear; }
+  .burgerLine { transition: none; }
 }

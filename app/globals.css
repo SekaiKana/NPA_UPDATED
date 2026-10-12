@@ -1,7 +1,7 @@
 /* =============================================================
    NPA — "BLUEPRINT"
    Bone ground, ink black, one walnut brown. Oldstyle serif
-   display against small, bold, wide-tracked capitals in the sans,
+   display against small semibold labels in the sans, in sentence case,
    structured by hairline rules. The page should read like a technical drawing that
    happens to be beautiful.
    ============================================================= */
@@ -45,7 +45,8 @@
     'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Noto Sans JP', sans-serif;
   /* Two faces, not three. The labels, navigation and readouts were set in
      IBM Plex Mono until the client asked for it to go (Sept 2026); they are
-     the sans now, in bold capitals. Do not bring a monospace back. */
+     the sans now, in sentence case (the client dropped the capitals in
+     Oct 2026). Do not bring a monospace back. */
 
   /* ---- Space ---- */
   --s-1: 0.5rem;
@@ -60,7 +61,9 @@
   /* ---- Layout ---- */
   --gutter: 2.5rem;
   --measure: 1560px;
-  --nav-h: 72px;
+  /* The room the floating navigation takes: its 12px gap from the top, the
+     52px pill, and a little air under it. */
+  --nav-h: 76px;
 
   /* ---- Motion ----
      One expressive curve and one functional one. Everything on the
@@ -223,8 +226,8 @@ html.lenis, html.lenis body { height: auto; }
    Display is an oldstyle serif: it wants size, leading a shade
    looser than a Didone, and a whisper of negative tracking. It has
    no optical-size axis, so weight does that job. Labels are the
-   opposite: tiny bold capitals in the sans, tracked wide enough to
-   read as an instrument panel rather than as text.
+   opposite: small semibold sans in sentence case, set close to their
+   natural tracking. Wide tracking was for the capitals they replaced.
    ============================================================= */
 
 .display {
@@ -264,10 +267,9 @@ html.lenis, html.lenis body { height: auto; }
 
 .label {
   font-family: var(--font-sans);
-  font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
   color: var(--ink-3);
   line-height: 1.4;
 }
@@ -487,7 +489,6 @@ html[lang='ja'] body {
 }
 
 @media (max-width: 640px) {
-  :root { --gutter: 1.15rem; --s-8: 6rem; --s-7: 4.5rem; --s-6: 3.5rem; --nav-h: 60px; }
-  .label { letter-spacing: 0.16em; }
+  :root { --gutter: 1.15rem; --s-8: 6rem; --s-7: 4.5rem; --s-6: 3.5rem; --nav-h: 68px; }
   .body { max-width: none; }
 }

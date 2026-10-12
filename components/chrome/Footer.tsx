@@ -92,8 +92,6 @@ export default function Footer() {
 
         <div className={styles.base}>
           <span className="meta">{t('footer.copy')}</span>
-          {/* The studio's position, read off like an instrument settling. */}
-          <Decode key={`coords-${pathname}`} className="meta" text={'35.6762° N, 139.6503° E'} />
         </div>
       </div>
     </footer>

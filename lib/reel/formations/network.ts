@@ -351,9 +351,9 @@ export class NetworkFormation implements Formation {
       g.fillStyle = theme.ink3;
       g.globalAlpha = vis;
       if (portrait) {
-        g.font = `700 10px ${theme.label}`;
+        g.font = `600 12px ${theme.label}`;
         this.layerAnchors.forEach((p, k) => {
-          label(g, (copy.layers[k] ?? '').toUpperCase(), p.x, p.y - this.ringR - 12, 2, 'left');
+          label(g, copy.layers[k] ?? '', p.x, p.y - this.ringR - 12, 0.2, 'left');
         });
       } else {
         /* Column heads have to fit their column. On a small frame, the
@@ -364,15 +364,15 @@ export class NetworkFormation implements Formation {
         const spacing = this.layerAnchors.length > 1
           ? this.layerAnchors[1].x - this.layerAnchors[0].x
           : Infinity;
-        const texts = this.layerAnchors.map((_, k) => (copy.layers[k] ?? '').toUpperCase());
-        let size = 10;
-        let tracking = 2.2;
-        g.font = `700 ${size}px ${theme.label}`;
+        const texts = this.layerAnchors.map((_, k) => copy.layers[k] ?? '');
+        let size = 12;
+        let tracking = 0.2;
+        g.font = `600 ${size}px ${theme.label}`;
         let widest = Math.max(...texts.map((tx) => trackedWidth(g, tx, tracking)));
         if (widest > spacing - 8) {
-          size = 8;
-          tracking = 1;
-          g.font = `700 ${size}px ${theme.label}`;
+          size = 10;
+          tracking = 0.1;
+          g.font = `600 ${size}px ${theme.label}`;
           widest = Math.max(...texts.map((tx) => trackedWidth(g, tx, tracking)));
         }
         if (widest <= spacing - 8) {
