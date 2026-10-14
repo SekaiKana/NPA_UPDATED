@@ -72,9 +72,7 @@ export class FlowFormation implements Formation {
       if (walls < 0.01) return;
       const step = 8;
 
-      /* The walls. Solid boundaries in a mechanical drawing carry hatching on
-         their outer face; so do these, which is the difference between a pair
-         of lines and a constraint. */
+      /* The walls: two clean lines, no hatching on their outer face. */
       g.lineWidth = 1;
       g.strokeStyle = theme.ink;
       g.globalAlpha = 0.62 * walls;
@@ -88,19 +86,6 @@ export class FlowFormation implements Formation {
         const y = sim.yc + sim.halfWidth(x);
         if (x === -step) g.moveTo(x, y);
         else g.lineTo(x, y);
-      }
-      g.stroke();
-
-      g.globalAlpha = 0.2 * walls;
-      g.beginPath();
-      const hatch = 6;
-      for (let x = 0; x <= W; x += 9) {
-        const yt = sim.yc - sim.halfWidth(x);
-        const yb = sim.yc + sim.halfWidth(x);
-        g.moveTo(x, yt - 1);
-        g.lineTo(x - hatch, yt - 1 - hatch);
-        g.moveTo(x, yb + 1);
-        g.lineTo(x - hatch, yb + 1 + hatch);
       }
       g.stroke();
 
